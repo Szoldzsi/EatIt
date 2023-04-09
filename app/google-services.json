@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "27037472006",
+    "firebase_url": "https://menu-tervezo-alkalmazas-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "menu-tervezo-alkalmazas",
+    "storage_bucket": "menu-tervezo-alkalmazas.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:27037472006:android:665cbfcf1896af87197a87",
+        "android_client_info": {
+          "package_name": "com.example.eatit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "27037472006-oeeqevn9fen5htfr08udb5tu253ubdhi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcFuv-fLYa5VdtJ1CRotW6vunINGBoBE4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "27037472006-oeeqevn9fen5htfr08udb5tu253ubdhi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
