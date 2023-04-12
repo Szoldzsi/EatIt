@@ -15,7 +15,21 @@
 
     <Button
         android:id="@+id/logoutBtn"
-        android:layout_width="match_parent"
+        android:layout_width="151dp"
+        android:layout_height="49dp"
+        android:text="Kijelentkezés" />
+
+    <Button
+        android:id="@+id/recipeBtn"
+        android:layout_width="151dp"
         android:layout_height="wrap_content"
-        android:text="Kijelentkezes" />
+        android:text="Új recept" />
+
+    <Button
+        android:id="@+id/recipeListBtn"
+        android:layout_width="151dp"
+        android:layout_height="wrap_content"
+        android:text="Receptek listázása" />
+
+
 </LinearLayout>
