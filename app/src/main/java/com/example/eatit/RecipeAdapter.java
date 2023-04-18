@@ -35,22 +35,22 @@ public class RecipeAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Inflate the layout for each list item
+
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.list_item_recipe, parent, false);
         }
 
-        // Get the Recipe object for this list item
+
         Recipe recipe = (Recipe) getItem(position);
 
-        // Set the recipe name and ingredients text views
+
         TextView nameTextView = convertView.findViewById(R.id.nameTextView);
         nameTextView.setText(recipe.getRecipeName());
 
         TextView ingredientsTextView = convertView.findViewById(R.id.ingredientsTextView);
         ingredientsTextView.setText(recipe.getRecipeIngredients());
 
-        // Set the recipe special text view if it is not empty
+
         TextView specialTextView = convertView.findViewById(R.id.specialTextView);
         if (recipe.getRecipeSpecial() != null && !recipe.getRecipeSpecial().isEmpty()) {
             specialTextView.setText(recipe.getRecipeSpecial());

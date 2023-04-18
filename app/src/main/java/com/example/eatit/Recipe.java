@@ -1,7 +1,7 @@
 package com.example.eatit;
 
 public class Recipe {
-    public String recipeName, recipeSpecial, recipeIngredients;
+    public String recipeName, recipeSpecial, recipeIngredients, key;
 
     public Recipe() {
     }
@@ -34,5 +34,13 @@ public class Recipe {
 
     public void setRecipeIngredients(String recipeIngredients) {
         this.recipeIngredients = recipeIngredients;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }
