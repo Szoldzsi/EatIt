@@ -45,15 +45,21 @@ public class RecipeAdapter extends BaseAdapter {
 
 
         TextView nameTextView = convertView.findViewById(R.id.nameTextView);
-        nameTextView.setText(recipe.getRecipeName());
+        nameTextView.setText("Recept neve: "+recipe.getRecipeName());
 
         TextView ingredientsTextView = convertView.findViewById(R.id.ingredientsTextView);
-        ingredientsTextView.setText(recipe.getRecipeIngredients());
+        if (recipe.getRecipeIngredients() != null && !recipe.getRecipeIngredients().isEmpty()) {
+            ingredientsTextView.setText("Hozzavalok: "+recipe.getRecipeSpecial());
+            ingredientsTextView.setVisibility(View.VISIBLE);
+        } else {
+            ingredientsTextView.setVisibility(View.GONE);
+        }
+        //ingredientsTextView.setText("Hozzavalok: "+recipe.getRecipeIngredients());
 
 
         TextView specialTextView = convertView.findViewById(R.id.specialTextView);
         if (recipe.getRecipeSpecial() != null && !recipe.getRecipeSpecial().isEmpty()) {
-            specialTextView.setText(recipe.getRecipeSpecial());
+            specialTextView.setText("Specialis: "+recipe.getRecipeSpecial());
             specialTextView.setVisibility(View.VISIBLE);
         } else {
             specialTextView.setVisibility(View.GONE);
