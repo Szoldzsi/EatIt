@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -21,6 +22,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,9 +37,12 @@ public class MainActivity extends AppCompatActivity {
      String username;
      ProgressBar progressBar;
      View loadingView;
+     FragmentTransaction transaction;
+     BottomNavigationView bottomNavigationView;
+     private static final String SELECTED_KEY = "selectedItemId";
+     private int selectedItemId;
 
     ArrayList<String> recipeArrayList;
-    Bundle usernameBundle = new Bundle();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
         db = FirebaseDatabase.getInstance();
 
         reference = FirebaseDatabase.getInstance().getReference("Users");
@@ -74,12 +84,35 @@ public class MainActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.INVISIBLE);
                     progressBar.setIndeterminate(false);
                     loadingView.setVisibility(View.GONE);
-                    logout.setVisibility(View.VISIBLE);
-                    newRecipe.setVisibility(View.VISIBLE);
-                    listRecipe.setVisibility(View.VISIBLE);
-                    logout.setActivated(true);
-                    newRecipe.setActivated(true);
-                    listRecipe.setActivated(true);
+                    //logout.setVisibility(View.VISIBLE);
+                    //newRecipe.setVisibility(View.VISIBLE);
+                    //listRecipe.setVisibility(View.VISIBLE);
+                    //logout.setActivated(true);
+                    //newRecipe.setActivated(true);
+                    //listRecipe.setActivated(true);
+                    /*transaction = getSupportFragmentManager().beginTransaction();
+                    RecipeListFragment recipeListFragment = new RecipeListFragment();
+                    transaction.replace(R.id.fragment_container, recipeListFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                    recipeListFragment.setUsername(username);*/
+                    if (savedInstanceState != null) {
+                        switch (selectedItemId){
+                            case R.id.navigation_list:
+                                RecipeListFragment recipeListFragment = new RecipeListFragment();
+                                recipeListFragment.setUsername(username);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeListFragment).commit();
+                            case R.id.navigation_nrec:
+                                RecipeFragment recipeFragment = new RecipeFragment();
+                                recipeFragment.setUsername(username);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment).commit();
+                        }
+                    }else{
+                        RecipeListFragment recipeListFragment = new RecipeListFragment();
+                        recipeListFragment.setUsername(username);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeListFragment).commit();
+                    }
+
 
                 }
                 else {
@@ -89,8 +122,47 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        selectedItemId = item.getItemId();
+                        switch (selectedItemId) {
+                            case R.id.navigation_list:
+                                transaction = getSupportFragmentManager().beginTransaction();
+                                RecipeListFragment recipeListFragment = new RecipeListFragment();
+                                transaction.replace(R.id.fragment_container, recipeListFragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                                recipeListFragment.setUsername(username);
 
-        logout.setOnClickListener(new View.OnClickListener() {
+                                return true;
+                            case R.id.navigation_nrec:
+                                transaction = getSupportFragmentManager().beginTransaction();
+                                RecipeFragment recipeFragment = new RecipeFragment();
+                                transaction.replace(R.id.fragment_container, recipeFragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                                recipeFragment.setUsername(username);
+                                return true;
+                            case R.id.navigation_logout:
+                                FirebaseAuth.getInstance().signOut();
+                                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                startActivity(intent);
+                                finish();
+                                return true;
+                        }
+                        return true;
+                    }
+                });
+
+        if (savedInstanceState != null) {
+            selectedItemId = savedInstanceState.getInt(SELECTED_KEY);
+            bottomNavigationView.setSelectedItemId(selectedItemId);
+        }
+
+        /*logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
@@ -98,9 +170,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        });
+        });*/
 
-        newRecipe.setOnClickListener(new View.OnClickListener() {
+        /*newRecipe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -112,15 +184,11 @@ public class MainActivity extends AppCompatActivity {
                 newRecipe.setEnabled(false);
                 listRecipe.setEnabled(true);
             }
-        });
+        });*/
 
-        listRecipe.setOnClickListener(new View.OnClickListener() {
+        /*listRecipe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent intent = new Intent(getApplicationContext(), RecipeListActivity.class);
-                intent.putExtra("username", username);
-                startActivity(intent);
-                finish();*/
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 RecipeListFragment recipeListFragment = new RecipeListFragment();
                 transaction.replace(R.id.fragment_container, recipeListFragment);
@@ -130,6 +198,11 @@ public class MainActivity extends AppCompatActivity {
                 newRecipe.setEnabled(true);
                 listRecipe.setEnabled(false);
             }
-        });
+        });*/
+
+    }
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SELECTED_KEY, selectedItemId);
     }
 }

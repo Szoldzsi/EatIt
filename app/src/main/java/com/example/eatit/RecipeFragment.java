@@ -27,14 +27,21 @@ public class RecipeFragment extends Fragment {
     EditText ingredients, special, recipeName;
     Button saveBtn;
 
-    //Bundle atvetele
     String username;
+
+    private static final String KEY = "username";
 
     public RecipeFragment() {
         // Required empty public constructor
     }
 
-
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            username = savedInstanceState.getString(KEY);
+        }
+    }
 
 
     @Override
@@ -86,5 +93,10 @@ public class RecipeFragment extends Fragment {
 
     public void setUsername(String username){
         this.username = username;
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY, username);
     }
 }

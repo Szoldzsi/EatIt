@@ -37,12 +37,19 @@ public class RecipeListFragment extends Fragment{
     ListView recList;
     private RecipeAdapter adapter;
     private ArrayList<Recipe> recipeList;
-
-
     DatabaseReference reference;
+    private static final String KEY = "username";
 
     public RecipeListFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            username = savedInstanceState.getString(KEY);
+        }
     }
 
 
@@ -142,6 +149,11 @@ public class RecipeListFragment extends Fragment{
 
     public void setUsername(String username){
         this.username = username;
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY, username);
     }
 
 }
