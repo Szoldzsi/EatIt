@@ -7,14 +7,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import java.util.ArrayList;
 
 public class RecipeAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<Recipe> recipes;
 
-    public RecipeAdapter(Context context, ArrayList<Recipe> recipes) {
-        this.context = context;
+    public RecipeAdapter(Fragment context, ArrayList<Recipe> recipes) {
+        this.context = context.requireContext();
         this.recipes = recipes;
     }
 

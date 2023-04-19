@@ -110,16 +110,25 @@ public class MainActivity extends AppCompatActivity {
                 transaction.commit();
                 recipeFragment.setUsername(username);
                 newRecipe.setEnabled(false);
+                listRecipe.setEnabled(true);
             }
         });
 
         listRecipe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), RecipeListActivity.class);
+                /*Intent intent = new Intent(getApplicationContext(), RecipeListActivity.class);
                 intent.putExtra("username", username);
                 startActivity(intent);
-                finish();
+                finish();*/
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                RecipeListFragment recipeListFragment = new RecipeListFragment();
+                transaction.replace(R.id.fragment_container, recipeListFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+                recipeListFragment.setUsername(username);
+                newRecipe.setEnabled(true);
+                listRecipe.setEnabled(false);
             }
         });
     }

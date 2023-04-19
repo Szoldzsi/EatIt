@@ -17,13 +17,12 @@
             android:name=".RecipeListActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Material3.Light.NoActionBar" />
-        <activity
             android:name=".MainActivity"
             android:exported="false"
             android:theme="@style/Theme.Material3.Light.NoActionBar" />
+
+        <activity android:name=".RecipeFragment" />
+
         <activity
             android:name=".LoginActivity"
             android:exported="true"

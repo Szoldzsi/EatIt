@@ -1,16 +1,16 @@
 package com.example.eatit;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,8 +19,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,7 +28,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeListActivity extends AppCompatActivity {
+
+public class RecipeListFragment extends Fragment{
 
     String username;
     TextView tw2;
@@ -42,18 +41,22 @@ public class RecipeListActivity extends AppCompatActivity {
 
     DatabaseReference reference;
 
+    public RecipeListFragment() {
+        // Required empty public constructor
+    }
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recipe_list);
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_recipe_list, container, false);
 
         //Deklarálás
-        Intent intent = getIntent();
-        username = intent.getStringExtra("username");
-        tw2 = findViewById(R.id.textView2);
-        recList = findViewById(R.id.recipeList);
+        //Intent intent = getIntent();
+        //username = intent.getStringExtra("username");
+        tw2 = view.findViewById(R.id.textView2);
+        recList = view.findViewById(R.id.recipeList);
         tw2.setText(username);
         recipeList = new ArrayList<>();
 
@@ -68,7 +71,7 @@ public class RecipeListActivity extends AppCompatActivity {
                     fillList();
                 }
                 else {
-                    Toast.makeText(RecipeListActivity.this, "Hiba", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Hiba", Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -85,6 +88,7 @@ public class RecipeListActivity extends AppCompatActivity {
             }
         });
 
+        return view;
     }
 
     public void fillList(){
@@ -106,7 +110,7 @@ public class RecipeListActivity extends AppCompatActivity {
 
 
                 //Adapter beállítás
-                //adapter = new RecipeAdapter(RecipeListActivity.this, recipeList);
+                adapter = new RecipeAdapter(RecipeListFragment.this, recipeList);
                 recList.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
@@ -124,16 +128,20 @@ public class RecipeListActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
 
-                        Toast.makeText(RecipeListActivity.this, "Recipe deleted", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Recipe deleted", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         // Failed to delete recipe
-                        Toast.makeText(RecipeListActivity.this, "Failed to delete recipe", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Failed to delete recipe", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    public void setUsername(String username){
+        this.username = username;
     }
 
 }
