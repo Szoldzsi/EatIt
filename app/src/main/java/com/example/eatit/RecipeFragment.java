@@ -48,13 +48,13 @@ public class RecipeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipe, container, false);
 
-        tw = view.findViewById(R.id.usernameTw);
+        //tw = view.findViewById(R.id.usernameTw);
         ingredients = view.findViewById(R.id.ingredientsText);
         special = view.findViewById(R.id.specialText);
         recipeName = view.findViewById(R.id.recipeText);
         saveBtn = view.findViewById(R.id.saveBtn);
 
-        tw.setText(username);
+        //tw.setText(username);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
