@@ -1,49 +1,48 @@
 package com.example.eatit;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.ui.database.FirebaseListAdapter;
-import com.firebase.ui.database.FirebaseListOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
 
     TextView tw;
     Button logout, newRecipe, listRecipe;
-    DatabaseReference reference, referenceDisplay;
-    FirebaseAuth mAuth;
+    DatabaseReference reference;
     FirebaseDatabase db;
+     String username;
+     ProgressBar progressBar;
+     View loadingView;
+     FragmentTransaction transaction;
+     BottomNavigationView bottomNavigationView;
+     private static final String SELECTED_KEY = "selectedItemId";
+     private int selectedItemId;
 
-
-    String username;
-    FirebaseListAdapter adapter;
     ArrayList<String> recipeArrayList;
-    boolean recipes_bool = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +54,20 @@ public class MainActivity extends AppCompatActivity {
         newRecipe = findViewById(R.id.recipeBtn);
         listRecipe = findViewById(R.id.recipeListBtn);
         recipeArrayList = new ArrayList<String>();
+        progressBar = findViewById(R.id.progressBar);
+        loadingView = findViewById(R.id.loading_view);
+        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setIndeterminate(true);
+        loadingView.setVisibility(View.VISIBLE);
+        logout.setVisibility(View.GONE);
+        newRecipe.setVisibility(View.GONE);
+        listRecipe.setVisibility(View.GONE);
+        logout.setActivated(false);
+        newRecipe.setActivated(false);
+        listRecipe.setActivated(false);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+
 
 
 
@@ -68,6 +81,39 @@ public class MainActivity extends AppCompatActivity {
                     DataSnapshot dataSnapshot = task.getResult();
                     username = String.valueOf(dataSnapshot.getValue());
                     tw.setText(username);
+                    progressBar.setVisibility(View.INVISIBLE);
+                    progressBar.setIndeterminate(false);
+                    loadingView.setVisibility(View.GONE);
+                    //logout.setVisibility(View.VISIBLE);
+                    //newRecipe.setVisibility(View.VISIBLE);
+                    //listRecipe.setVisibility(View.VISIBLE);
+                    //logout.setActivated(true);
+                    //newRecipe.setActivated(true);
+                    //listRecipe.setActivated(true);
+                    /*transaction = getSupportFragmentManager().beginTransaction();
+                    RecipeListFragment recipeListFragment = new RecipeListFragment();
+                    transaction.replace(R.id.fragment_container, recipeListFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                    recipeListFragment.setUsername(username);*/
+                    if (savedInstanceState != null) {
+                        switch (selectedItemId){
+                            case R.id.navigation_list:
+                                RecipeListFragment recipeListFragment = new RecipeListFragment();
+                                recipeListFragment.setUsername(username);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeListFragment).commit();
+                            case R.id.navigation_nrec:
+                                RecipeFragment recipeFragment = new RecipeFragment();
+                                recipeFragment.setUsername(username);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment).commit();
+                        }
+                    }else{
+                        RecipeListFragment recipeListFragment = new RecipeListFragment();
+                        recipeListFragment.setUsername(username);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeListFragment).commit();
+                    }
+
+
                 }
                 else {
                     Toast.makeText(MainActivity.this, "Hiba", Toast.LENGTH_SHORT).show();
@@ -75,7 +121,48 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        logout.setOnClickListener(new View.OnClickListener() {
+
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        selectedItemId = item.getItemId();
+                        switch (selectedItemId) {
+                            case R.id.navigation_list:
+                                transaction = getSupportFragmentManager().beginTransaction();
+                                RecipeListFragment recipeListFragment = new RecipeListFragment();
+                                transaction.replace(R.id.fragment_container, recipeListFragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                                recipeListFragment.setUsername(username);
+
+                                return true;
+                            case R.id.navigation_nrec:
+                                transaction = getSupportFragmentManager().beginTransaction();
+                                RecipeFragment recipeFragment = new RecipeFragment();
+                                transaction.replace(R.id.fragment_container, recipeFragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                                recipeFragment.setUsername(username);
+                                return true;
+                            case R.id.navigation_logout:
+                                FirebaseAuth.getInstance().signOut();
+                                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                startActivity(intent);
+                                finish();
+                                return true;
+                        }
+                        return true;
+                    }
+                });
+
+        if (savedInstanceState != null) {
+            selectedItemId = savedInstanceState.getInt(SELECTED_KEY);
+            bottomNavigationView.setSelectedItemId(selectedItemId);
+        }
+
+        /*logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
@@ -83,26 +170,39 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        });
+        });*/
 
-        newRecipe.setOnClickListener(new View.OnClickListener() {
+        /*newRecipe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), RecipeActivity.class);
-                intent.putExtra("username", username);
-                startActivity(intent);
-                finish();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                RecipeFragment recipeFragment = new RecipeFragment();
+                transaction.replace(R.id.fragment_container, recipeFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+                recipeFragment.setUsername(username);
+                newRecipe.setEnabled(false);
+                listRecipe.setEnabled(true);
             }
-        });
+        });*/
 
-        listRecipe.setOnClickListener(new View.OnClickListener() {
+        /*listRecipe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), RecipeListActivity.class);
-                intent.putExtra("username", username);
-                startActivity(intent);
-                finish();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                RecipeListFragment recipeListFragment = new RecipeListFragment();
+                transaction.replace(R.id.fragment_container, recipeListFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+                recipeListFragment.setUsername(username);
+                newRecipe.setEnabled(true);
+                listRecipe.setEnabled(false);
             }
-        });
+        });*/
+
+    }
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SELECTED_KEY, selectedItemId);
     }
 }

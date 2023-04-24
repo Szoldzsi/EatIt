@@ -1,12 +1,15 @@
 package com.example.eatit;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,28 +19,41 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class RecipeActivity extends AppCompatActivity {
 
-    String username;
+public class RecipeFragment extends Fragment {
+
+
     TextView tw;
     EditText ingredients, special, recipeName;
     Button saveBtn;
 
+    String username;
+
+    private static final String KEY = "username";
+
+    public RecipeFragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recipe);
-
-        tw = findViewById(R.id.usernameTw);
-        ingredients = findViewById(R.id.ingredientsText);
-        special = findViewById(R.id.specialText);
-        recipeName = findViewById(R.id.recipeText);
-        saveBtn = findViewById(R.id.saveBtn);
+        if (savedInstanceState != null) {
+            username = savedInstanceState.getString(KEY);
+        }
+    }
 
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_recipe, container, false);
 
-        Intent intent = getIntent();
-        username = intent.getStringExtra("username");
+        tw = view.findViewById(R.id.usernameTw);
+        ingredients = view.findViewById(R.id.ingredientsText);
+        special = view.findViewById(R.id.specialText);
+        recipeName = view.findViewById(R.id.recipeText);
+        saveBtn = view.findViewById(R.id.saveBtn);
+
         tw.setText(username);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -48,11 +64,7 @@ public class RecipeActivity extends AppCompatActivity {
                 String ingredients_list = ingredients.getText().toString();
 
                 if (TextUtils.isEmpty(recipe_Name)){
-                    Toast.makeText(RecipeActivity.this, "Hiányzó recept név!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (TextUtils.isEmpty(ingredients_list)){
-                    Toast.makeText(RecipeActivity.this, "Hiányzó hozzávalók!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Hiányzó recept név!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -63,12 +75,9 @@ public class RecipeActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()){
-                                Toast.makeText(RecipeActivity.this, "Recept sikeresen elmentve!", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(intent);
-                                finish();
+                                Toast.makeText(getActivity(), "Recept sikeresen elmentve!", Toast.LENGTH_SHORT).show();
                             }else{
-                                Toast.makeText(RecipeActivity.this, "Hiba!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "Hiba!", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -79,5 +88,15 @@ public class RecipeActivity extends AppCompatActivity {
             }
         });
 
+        return view;
+    }
+
+    public void setUsername(String username){
+        this.username = username;
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY, username);
     }
 }
