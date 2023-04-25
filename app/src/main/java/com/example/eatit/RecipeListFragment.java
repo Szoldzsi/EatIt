@@ -62,7 +62,7 @@ public class RecipeListFragment extends Fragment{
         //Deklarálás
         //Intent intent = getIntent();
         //username = intent.getStringExtra("username");
-        tw2 = view.findViewById(R.id.textView2);
+        //tw2 = view.findViewById(R.id.textView2);
         recList = view.findViewById(R.id.recipeList);
         //tw2.setText(username);
         recipeList = new ArrayList<>();

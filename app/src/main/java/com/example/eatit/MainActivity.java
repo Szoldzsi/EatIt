@@ -40,7 +40,9 @@ public class MainActivity extends AppCompatActivity {
      FragmentTransaction transaction;
      BottomNavigationView bottomNavigationView;
      private static final String SELECTED_KEY = "selectedItemId";
+     private static final String USED_USERNAME = "usedUsername";
      private int selectedItemId;
+     private String usdusername;
 
     ArrayList<String> recipeArrayList;
 
@@ -204,5 +206,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(SELECTED_KEY, selectedItemId);
+        outState.putString(USED_USERNAME, username);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        username = savedInstanceState.getString(USED_USERNAME);
+
+        RecipeListFragment recipeListFragment = (RecipeListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (recipeListFragment == null) {
+            // Fragment is not added, add it to the activity
+            recipeListFragment = new RecipeListFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, recipeListFragment)
+                    .commit();
+        }
     }
 }
