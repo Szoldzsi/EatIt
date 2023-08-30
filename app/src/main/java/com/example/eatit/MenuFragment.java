@@ -11,28 +11,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.FirebaseDatabase;
 
+public class MenuFragment extends Fragment {
 
-public class RecipeFragment extends Fragment {
-
-
-    TextView tw;
-    EditText ingredients, special, recipeName;
+    EditText menuName, recipeName, ingredientsName;
     Button saveBtn;
 
     String username;
 
     private static final String KEY = "username";
 
-    public RecipeFragment() {
+    public MenuFragment() {
         // Required empty public constructor
     }
+    //public static MenuFragment newInstance(String param1, String param2) {
+    //    MenuFragment fragment = new MenuFragment();
+    //    Bundle args = new Bundle();
+      //  args.putString(ARG_PARAM1, param1);
+        //args.putString(ARG_PARAM2, param2);
+        //fragment.setArguments(args);
+        //return fragment;
+    //}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,39 +46,36 @@ public class RecipeFragment extends Fragment {
         }
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_recipe, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_menu, container, false);
 
-        //tw = view.findViewById(R.id.usernameTw);
-        ingredients = view.findViewById(R.id.ingredientsText);
-        special = view.findViewById(R.id.specialText);
-        recipeName = view.findViewById(R.id.recipeText);
-        saveBtn = view.findViewById(R.id.saveBtn);
-
-        //tw.setText(username);
+        menuName = view.findViewById(R.id.menuText);
+        recipeName = view.findViewById(R.id.recipeTextM);
+        ingredientsName = view.findViewById(R.id.ingrText);
+        saveBtn = view.findViewById(R.id.saveBtn2);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String recipe_Name = recipeName.getText().toString();
-                String special_mark = special.getText().toString();
-                String ingredients_list = ingredients.getText().toString();
+                String menu_Name = menuName.getText().toString();
+                String rec_name = recipeName.getText().toString();
+                String ingredients_list = ingredientsName.getText().toString();
 
-                if (TextUtils.isEmpty(recipe_Name)){
-                    Toast.makeText(getActivity(), "Hiányzó recept név!", Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(menu_Name)){
+                    Toast.makeText(getActivity(), "Hiányzó menü név!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                Recipe recipe = new Recipe(recipe_Name, special_mark, ingredients_list);
+                Menu menu = new Menu(menu_Name, rec_name, ingredients_list);
 
                 try {
-                    FirebaseDatabase.getInstance().getReference("Recipes").child(username).push().setValue(recipe).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    FirebaseDatabase.getInstance().getReference("Menus").child(username).push().setValue(menu).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()){
-                                Toast.makeText(getActivity(), "Recept sikeresen elmentve!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "Menü sikeresen elmentve!", Toast.LENGTH_SHORT).show();
                             }else{
                                 Toast.makeText(getActivity(), "Hiba!", Toast.LENGTH_SHORT).show();
                             }
