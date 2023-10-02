@@ -1,6 +1,9 @@
 package com.example.eatit;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -124,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                                 return true;
                             case R.id.navigation_nrec:
                                 transaction = getSupportFragmentManager().beginTransaction();
-                                RecipeFragment recipeFragment = new RecipeFragment();
+                                NewMenuFragment recipeFragment = new NewMenuFragment();
                                 transaction.replace(R.id.fragment_container, recipeFragment);
                                 transaction.addToBackStack(null);
                                 transaction.commit();

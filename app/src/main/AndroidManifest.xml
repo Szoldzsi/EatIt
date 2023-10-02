@@ -14,15 +14,16 @@
         android:theme="@style/Theme.EatIt"
         tools:targetApi="31">
         <activity
+            android:name=".NewMenuActivity"
+            android:exported="false" />
+        <activity
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false"
             android:theme="@style/Theme.EatIt" />
-
         <activity android:name=".RecipeFragment" />
-
         <activity
             android:name=".LoginActivity"
             android:exported="true"
