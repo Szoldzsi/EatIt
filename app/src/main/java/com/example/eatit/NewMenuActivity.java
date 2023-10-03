@@ -19,12 +19,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
 
 public class NewMenuActivity extends AppCompatActivity {
 
     String usrname;
     String name;
+    Date startDate;
+    int duration;
     private final List<MenuClass> formDataList = new ArrayList<>();
     private MenuAdapter adapter;
 
@@ -32,14 +37,20 @@ public class NewMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_menu);
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        adapter = new MenuAdapter(formDataList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
         Intent intent = getIntent();
+
         usrname = intent.getStringExtra("username");
         name = intent.getStringExtra("name");
+        startDate = (Date) getIntent().getSerializableExtra("startDate");
+        duration = intent.getIntExtra("duration", 0);
+
+        setupFormDataList();
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        adapter = new MenuAdapter(formDataList, calculateDates());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+
         Button addButton = findViewById(R.id.addButton);
         Button submitButton = findViewById(R.id.submitButton);
 
@@ -82,6 +93,26 @@ public class NewMenuActivity extends AppCompatActivity {
                     }
                 }
             });
+        }
+    }
+
+    private List<Calendar> calculateDates(){
+        Calendar initDate = Calendar.getInstance();
+        initDate.setTime(startDate);
+
+        List<Calendar> formDates = new ArrayList<>();
+        for (int i = 0; i < duration;i++){
+            Calendar formDate = (Calendar) initDate.clone();
+            formDate.add(Calendar.DAY_OF_MONTH, i);
+            formDates.add(formDate);
+        }
+
+        return formDates;
+    }
+    private void setupFormDataList() {
+        formDataList.clear(); // Clear any existing forms
+        for (int i = 0; i < duration; i++) {
+            formDataList.add(new MenuClass()); // Add a form for each day
         }
     }
 

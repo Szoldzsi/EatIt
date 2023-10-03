@@ -12,9 +12,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class NewMenuFragment extends Fragment {
 
-    EditText det;
+    EditText det, dat, dur;
     Button startBtn;
     TextView tw;
 
@@ -40,6 +45,8 @@ public class NewMenuFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_new_menu, container, false);
 
         det = view.findViewById(R.id.napokTF);
+        dat = view.findViewById(R.id.datumTF);
+        dur = view.findViewById(R.id.idotartamTF);
         startBtn = view.findViewById(R.id.startBtn);
         tw = view.findViewById(R.id.textView11);
 
@@ -48,13 +55,25 @@ public class NewMenuFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
-                String intStr = det.getText().toString();
+                try {
+                    String intStr = det.getText().toString();
+                    String datStr = dat.getText().toString();
+                    int durat = Integer.parseInt(dur.getText().toString());
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+                    Date startDate = dateFormat.parse(datStr);
+                    Intent intent = new Intent(getContext(), NewMenuActivity.class);
 
-                Intent intent = new Intent(getContext(), NewMenuActivity.class);
+                    intent.putExtra("username",tw.getText().toString());
+                    intent.putExtra("name", intStr);
+                    intent.putExtra("startDate", startDate);
+                    intent.putExtra("duration", durat);
 
-                intent.putExtra("username",tw.getText().toString());
-                intent.putExtra("name", intStr);
-                startActivity(intent);
+                    startActivity(intent);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+
+
             }
         });
 
