@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -32,6 +33,7 @@ public class NewMenuActivity extends AppCompatActivity {
     int duration;
     private final List<MenuClass> formDataList = new ArrayList<>();
     private MenuAdapter adapter;
+    private List<Calendar> formDates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,24 +46,16 @@ public class NewMenuActivity extends AppCompatActivity {
         startDate = (Date) getIntent().getSerializableExtra("startDate");
         duration = intent.getIntExtra("duration", 0);
 
+        formDates = calculateDates();
         setupFormDataList();
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        adapter = new MenuAdapter(formDataList, calculateDates());
+        adapter = new MenuAdapter(formDataList, formDates);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        Button addButton = findViewById(R.id.addButton);
         Button submitButton = findViewById(R.id.submitButton);
 
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Add a new form when the button is clicked
-                formDataList.add(new MenuClass());
-                adapter.notifyDataSetChanged();
-            }
-        });
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,14 +68,19 @@ public class NewMenuActivity extends AppCompatActivity {
 
     private void uploadDataToFirebase() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        String username = "asd1234"; // Replace with the actual username
         DatabaseReference reference = database.getReference("Menus").child(usrname);
 
         for (int index = 0; index < formDataList.size(); index++) {
             MenuClass formData = formDataList.get(index);
-//            DatabaseReference menuRef = reference.child(name);
-            // Push the data to generate a unique child node ID
-            reference.child(name).push().setValue(formData).addOnCompleteListener(new OnCompleteListener<Void>() {
+            Calendar formDate = formDates.get(index); // Get the corresponding date
+
+            // Format the date to a string (you can choose your desired date format)
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String dateString = dateFormat.format(formDate.getTime());
+
+            // Create a child node with the date as the key
+            DatabaseReference childReference = reference.child(name).child(dateString);
+            childReference.setValue(formData).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
@@ -95,6 +94,7 @@ public class NewMenuActivity extends AppCompatActivity {
             });
         }
     }
+
 
     private List<Calendar> calculateDates(){
         Calendar initDate = Calendar.getInstance();
