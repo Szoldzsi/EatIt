@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 public class RecipeAdapter extends BaseAdapter {
     private Context context;
+
     private ArrayList<Recipe> recipes;
 
     public RecipeAdapter(Fragment context, ArrayList<Recipe> recipes) {

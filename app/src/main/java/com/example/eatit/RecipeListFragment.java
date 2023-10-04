@@ -56,15 +56,10 @@ public class RecipeListFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recipe_list, container, false);
 
         //Deklarálás
-        //Intent intent = getIntent();
-        //username = intent.getStringExtra("username");
-        //tw2 = view.findViewById(R.id.textView2);
         recList = view.findViewById(R.id.recipeList);
-        //tw2.setText(username);
         recipeList = new ArrayList<>();
 
 

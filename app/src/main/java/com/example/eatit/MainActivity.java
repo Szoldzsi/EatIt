@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                         switch (selectedItemId) {
                             case R.id.navigation_list:
                                 transaction = getSupportFragmentManager().beginTransaction();
-                                RecipeListFragment recipeListFragment = new RecipeListFragment();
+                                MenuListFragment recipeListFragment = new MenuListFragment();
                                 transaction.replace(R.id.fragment_container, recipeListFragment);
                                 transaction.addToBackStack(null);
                                 transaction.commit();

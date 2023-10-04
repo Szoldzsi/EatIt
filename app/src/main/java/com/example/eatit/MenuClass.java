@@ -1,7 +1,7 @@
 package com.example.eatit;
 
 public class MenuClass {
-    private String menuName;
+    private String menuName, key;
     private String menuSpecial;
     private String menuIngredients;
 
@@ -13,6 +13,7 @@ public class MenuClass {
         this.menuSpecial = menuSpecial;
         this.menuIngredients = menuIngredients;
     }
+
 
     public String getMenuName() {
         return menuName;
@@ -36,5 +37,13 @@ public class MenuClass {
 
     public void setIngredients(String menuIngredients) {
         this.menuIngredients = menuIngredients;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }
