@@ -86,16 +86,16 @@ public class MainActivity extends AppCompatActivity {
                     if (savedInstanceState != null) {
                         switch (selectedItemId){
                             case R.id.navigation_list:
-                                RecipeListFragment recipeListFragment = new RecipeListFragment();
+                                MenuListFragment recipeListFragment = new MenuListFragment();
                                 recipeListFragment.setUsername(username);
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeListFragment).commit();
                             case R.id.navigation_nrec:
-                                RecipeFragment recipeFragment = new RecipeFragment();
+                                NewMenuFragment recipeFragment = new NewMenuFragment();
                                 recipeFragment.setUsername(username);
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeFragment).commit();
                         }
                     }else{
-                        RecipeListFragment recipeListFragment = new RecipeListFragment();
+                        MenuListFragment recipeListFragment = new MenuListFragment();
                         recipeListFragment.setUsername(username);
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, recipeListFragment).commit();
                     }
@@ -134,10 +134,16 @@ public class MainActivity extends AppCompatActivity {
                                 recipeFragment.setUsername(username);
                                 return true;
                             case R.id.navigation_logout:
-                                FirebaseAuth.getInstance().signOut();
-                                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                                startActivity(intent);
-                                finish();
+//                                FirebaseAuth.getInstance().signOut();
+//                                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//                                startActivity(intent);
+//                                finish();
+                                transaction = getSupportFragmentManager().beginTransaction();
+                                OthersFragment othersFragment =  new OthersFragment();
+                                transaction.replace(R.id.fragment_container, othersFragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                                othersFragment.setUsername(username);
                                 return true;
                         }
                         return true;

@@ -78,6 +78,10 @@ public class NewMenuActivity extends AppCompatActivity {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String dateString = dateFormat.format(formDate.getTime());
 
+            Log.d("Firebase_Upload", "Index: " + index);
+            Log.d("Firebase_Upload", "Date: " + dateString);
+            Log.d("Firebase_Upload", "formData: " + formData.toString());
+
             // Create a child node with the date as the key
             DatabaseReference childReference = reference.child(name).child(dateString);
             childReference.setValue(formData).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -96,24 +100,30 @@ public class NewMenuActivity extends AppCompatActivity {
     }
 
 
-    private List<Calendar> calculateDates(){
+    private List<Calendar> calculateDates() {
         Calendar initDate = Calendar.getInstance();
         initDate.setTime(startDate);
 
         List<Calendar> formDates = new ArrayList<>();
-        for (int i = 0; i < duration;i++){
+        for (int i = 0; i < duration; i++) {
             Calendar formDate = (Calendar) initDate.clone();
             formDate.add(Calendar.DAY_OF_MONTH, i);
             formDates.add(formDate);
+
+            // Log the calculated date for debugging
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Log.d("CalculateDates", "Date " + i + ": " + dateFormat.format(formDate.getTime()));
         }
 
         return formDates;
     }
+
     private void setupFormDataList() {
         formDataList.clear(); // Clear any existing forms
         for (int i = 0; i < duration; i++) {
-            formDataList.add(new MenuClass()); // Add a form for each day
+            formDataList.add(new MenuClass());
         }
+        Log.d("NewMenuActivity", "formDataList size: " + formDataList.size());
     }
 
 

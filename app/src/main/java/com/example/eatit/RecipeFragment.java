@@ -70,7 +70,7 @@ public class RecipeFragment extends Fragment {
                 Recipe recipe = new Recipe(recipe_Name, special_mark, ingredients_list);
 
                 try {
-                    FirebaseDatabase.getInstance().getReference("Recipes").child(username).push().setValue(recipe).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    FirebaseDatabase.getInstance().getReference("Recipes").child("asd1234").push().setValue(recipe).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()){

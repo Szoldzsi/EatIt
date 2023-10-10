@@ -4,11 +4,13 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -81,6 +83,35 @@ public class MenuListFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle onCancelled event if needed
+            }
+        });
+
+        menuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Get the selected menu
+                MenuClass selectedMenu = menuListItems.get(position);
+
+                // Get the menu name and date
+                String menuName = selectedMenu.getMenuName();
+
+                if (menuName != null && !menuName.isEmpty()) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("menuName", menuName);
+
+                    MenuDetailsFragment menuDetailsFragment = new MenuDetailsFragment();
+
+                    menuDetailsFragment.setArguments(bundle);
+                    menuDetailsFragment.setUsername(username);
+
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, menuDetailsFragment);
+                    transaction.addToBackStack(null); // Optional: Add to back stack for navigation
+                    transaction.commit();
+                } else {
+                    // Handle the case when menuName or menuDate is null or empty
+                    Toast.makeText(getActivity(), "Invalid menu selection", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
