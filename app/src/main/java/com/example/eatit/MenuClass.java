@@ -1,18 +1,21 @@
 package com.example.eatit;
 
 public class MenuClass {
-    private String menuName;
+    private String menuName, key;
     private String menuSpecial;
     private String menuIngredients;
+    private String menuDate;
 
     public MenuClass(){
 
     }
-    public MenuClass(String menuName, String menuSpecial, String menuIngredients){
+    public MenuClass(String menuName, String menuSpecial, String menuIngredients, String menuDate){
         this.menuName = menuName;
         this.menuSpecial = menuSpecial;
         this.menuIngredients = menuIngredients;
+        this.menuDate = menuDate;
     }
+
 
     public String getMenuName() {
         return menuName;
@@ -36,5 +39,21 @@ public class MenuClass {
 
     public void setIngredients(String menuIngredients) {
         this.menuIngredients = menuIngredients;
+    }
+
+    public String getMenuDate() {
+        return menuDate;
+    }
+
+    public void setMenuDate(String menuDate) {
+        this.menuDate = menuDate;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

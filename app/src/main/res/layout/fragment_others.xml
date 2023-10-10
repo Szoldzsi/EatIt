@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".OthersFragment" >
+
+    <Button
+        android:id="@+id/newRecipeBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Új recept hozzáadása" />
+
+    <Button
+        android:id="@+id/recListBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Receptek listázása" />
+
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kijelentkezés" />
+</LinearLayout>

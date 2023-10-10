@@ -18,39 +18,44 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
 
 public class NewMenuActivity extends AppCompatActivity {
 
     String usrname;
     String name;
+    Date startDate;
+    int duration;
     private final List<MenuClass> formDataList = new ArrayList<>();
     private MenuAdapter adapter;
+    private List<Calendar> formDates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_menu);
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        adapter = new MenuAdapter(formDataList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
         Intent intent = getIntent();
+
         usrname = intent.getStringExtra("username");
         name = intent.getStringExtra("name");
-        Button addButton = findViewById(R.id.addButton);
+        startDate = (Date) getIntent().getSerializableExtra("startDate");
+        duration = intent.getIntExtra("duration", 0);
+
+        formDates = calculateDates();
+        setupFormDataList();
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        adapter = new MenuAdapter(formDataList, formDates);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+
         Button submitButton = findViewById(R.id.submitButton);
 
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Add a new form when the button is clicked
-                formDataList.add(new MenuClass());
-                adapter.notifyDataSetChanged();
-            }
-        });
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,14 +68,23 @@ public class NewMenuActivity extends AppCompatActivity {
 
     private void uploadDataToFirebase() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        String username = "asd1234"; // Replace with the actual username
         DatabaseReference reference = database.getReference("Menus").child(usrname);
 
         for (int index = 0; index < formDataList.size(); index++) {
             MenuClass formData = formDataList.get(index);
-//            DatabaseReference menuRef = reference.child(name);
-            // Push the data to generate a unique child node ID
-            reference.child(name).push().setValue(formData).addOnCompleteListener(new OnCompleteListener<Void>() {
+            Calendar formDate = formDates.get(index); // Get the corresponding date
+
+            // Format the date to a string (you can choose your desired date format)
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String dateString = dateFormat.format(formDate.getTime());
+
+            Log.d("Firebase_Upload", "Index: " + index);
+            Log.d("Firebase_Upload", "Date: " + dateString);
+            Log.d("Firebase_Upload", "formData: " + formData.toString());
+
+            // Create a child node with the date as the key
+            DatabaseReference childReference = reference.child(name).child(dateString);
+            childReference.setValue(formData).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
@@ -83,6 +97,33 @@ public class NewMenuActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+
+    private List<Calendar> calculateDates() {
+        Calendar initDate = Calendar.getInstance();
+        initDate.setTime(startDate);
+
+        List<Calendar> formDates = new ArrayList<>();
+        for (int i = 0; i < duration; i++) {
+            Calendar formDate = (Calendar) initDate.clone();
+            formDate.add(Calendar.DAY_OF_MONTH, i);
+            formDates.add(formDate);
+
+            // Log the calculated date for debugging
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Log.d("CalculateDates", "Date " + i + ": " + dateFormat.format(formDate.getTime()));
+        }
+
+        return formDates;
+    }
+
+    private void setupFormDataList() {
+        formDataList.clear(); // Clear any existing forms
+        for (int i = 0; i < duration; i++) {
+            formDataList.add(new MenuClass());
+        }
+        Log.d("NewMenuActivity", "formDataList size: " + formDataList.size());
     }
 
 
