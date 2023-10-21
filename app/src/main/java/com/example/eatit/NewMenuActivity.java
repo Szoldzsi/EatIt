@@ -50,7 +50,7 @@ public class NewMenuActivity extends AppCompatActivity {
         setupFormDataList();
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        adapter = new MenuAdapter(formDataList, formDates);
+        adapter = new MenuAdapter(this, formDataList, formDates, usrname);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 

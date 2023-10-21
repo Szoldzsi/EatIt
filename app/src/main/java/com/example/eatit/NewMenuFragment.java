@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,6 +76,31 @@ public class NewMenuFragment extends Fragment {
                 }
 
 
+            }
+        });
+
+        dat.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String input = s.toString().trim();
+                if (input.length() == 4) {
+                    // Add a dot after the year
+                    input = input + ".";
+                } else if (input.length() == 7) {
+                    // Add a dot after the month
+                    input = input + ".";
+                }
+                // Set the text to the formatted input
+                dat.removeTextChangedListener(this);
+                dat.setText(input);
+                dat.setSelection(input.length());
+                dat.addTextChangedListener(this);
             }
         });
 

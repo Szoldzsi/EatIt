@@ -46,20 +46,6 @@ public class RecipeAdapter extends BaseAdapter {
 
         Recipe recipe = (Recipe) getItem(position);
 
-
-        TextView nameTextView = convertView.findViewById(R.id.nameTextView);
-        nameTextView.setText("Recept neve: "+recipe.getRecipeName());
-
-        TextView ingredientsTextView = convertView.findViewById(R.id.ingredientsTextView);
-        if (recipe.getRecipeIngredients() != null && !recipe.getRecipeIngredients().isEmpty()) {
-            ingredientsTextView.setText("Hozzavalok: "+recipe.getRecipeSpecial());
-            ingredientsTextView.setVisibility(View.VISIBLE);
-        } else {
-            ingredientsTextView.setVisibility(View.GONE);
-        }
-        //ingredientsTextView.setText("Hozzavalok: "+recipe.getRecipeIngredients());
-
-
         TextView specialTextView = convertView.findViewById(R.id.specialTextView);
         if (recipe.getRecipeSpecial() != null && !recipe.getRecipeSpecial().isEmpty()) {
             specialTextView.setText("Specialis: "+recipe.getRecipeSpecial());
@@ -67,6 +53,19 @@ public class RecipeAdapter extends BaseAdapter {
         } else {
             specialTextView.setVisibility(View.GONE);
         }
+
+        TextView nameTextView = convertView.findViewById(R.id.nameTextView);
+        nameTextView.setText("Recept neve: "+recipe.getRecipeName());
+
+        TextView ingredientsTextView = convertView.findViewById(R.id.ingredientsTextView);
+        if (recipe.getRecipeIngredients() != null && !recipe.getRecipeIngredients().isEmpty()) {
+            ingredientsTextView.setText("Hozzavalok: "+recipe.getRecipeIngredients());
+            ingredientsTextView.setVisibility(View.VISIBLE);
+        } else {
+            ingredientsTextView.setVisibility(View.GONE);
+        }
+        //ingredientsTextView.setText("Hozzavalok: "+recipe.getRecipeIngredients());
+
 
         return convertView;
     }

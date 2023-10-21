@@ -19,6 +19,18 @@
         android:text="Receptek listázása" />
 
     <Button
+        android:id="@+id/createGroupBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Csoport létrehozása" />
+
+    <Button
+        android:id="@+id/listGroupBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Csoportok listázása" />
+
+    <Button
         android:id="@+id/logoutButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
