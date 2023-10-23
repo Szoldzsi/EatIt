@@ -34,6 +34,7 @@ public class NewMenuActivity extends AppCompatActivity {
     private final List<MenuClass> formDataList = new ArrayList<>();
     private MenuAdapter adapter;
     private List<Calendar> formDates;
+    String grpKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +46,17 @@ public class NewMenuActivity extends AppCompatActivity {
         name = intent.getStringExtra("name");
         startDate = (Date) getIntent().getSerializableExtra("startDate");
         duration = intent.getIntExtra("duration", 0);
+        if (intent.hasExtra("grpKey")) {
+            grpKey = intent.getStringExtra("grpKey");
+        } else {
+            grpKey = null;
+        }
 
         formDates = calculateDates();
         setupFormDataList();
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        adapter = new MenuAdapter(formDataList, formDates);
+        adapter = new MenuAdapter(this, formDataList, formDates, usrname);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
@@ -60,7 +66,6 @@ public class NewMenuActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Upload data to Firebase
                 uploadDataToFirebase();
             }
         });
@@ -68,31 +73,31 @@ public class NewMenuActivity extends AppCompatActivity {
 
     private void uploadDataToFirebase() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("Menus").child(usrname);
+        /*DatabaseReference reference = database.getReference("Menus").child(usrname);*/
+        DatabaseReference reference;
+
+        if (grpKey != null && !grpKey.isEmpty()) {
+            reference = database.getReference("Groups").child(grpKey).child("group_menus");
+        } else {
+            reference = database.getReference("Menus").child(usrname);
+        }
 
         for (int index = 0; index < formDataList.size(); index++) {
             MenuClass formData = formDataList.get(index);
-            Calendar formDate = formDates.get(index); // Get the corresponding date
+            Calendar formDate = formDates.get(index);
 
-            // Format the date to a string (you can choose your desired date format)
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String dateString = dateFormat.format(formDate.getTime());
 
-            Log.d("Firebase_Upload", "Index: " + index);
-            Log.d("Firebase_Upload", "Date: " + dateString);
-            Log.d("Firebase_Upload", "formData: " + formData.toString());
 
-            // Create a child node with the date as the key
             DatabaseReference childReference = reference.child(name).child(dateString);
             childReference.setValue(formData).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        // Data uploaded successfully
-                        Log.d("Firebase_Upload", "Data uploaded successfully");
+                        Log.d("Firebase_Upload", "sikeres feltöltes");
                     } else {
-                        // Handle the error
-                        Log.e("Firebase_Upload", "Error: " + task.getException().getMessage());
+                        Log.e("Firebase_Upload", "hiba: " + task.getException().getMessage());
                     }
                 }
             });

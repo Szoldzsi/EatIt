@@ -19,7 +19,7 @@ public class OthersFragment extends Fragment {
     private static final String KEY = "username";
     String username;
 
-    Button logout, newRecipe, listRecipe;
+    Button logout, newRecipe, listRecipe, createGrp, listGrpBtn;
 
     public OthersFragment() {
         // Required empty public constructor
@@ -42,7 +42,35 @@ public class OthersFragment extends Fragment {
         logout = view.findViewById(R.id.logoutButton);
         newRecipe = view.findViewById(R.id.newRecipeBtn);
         listRecipe = view.findViewById(R.id.recListBtn);
+        createGrp = view.findViewById(R.id.createGroupBtn);
+        listGrpBtn = view.findViewById(R.id.listGroupBtn);
 
+        createGrp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NewGroupFragment newGroupFragment = new NewGroupFragment();
+                newGroupFragment.setUsername(username);
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, newGroupFragment);
+                fragmentTransaction.addToBackStack(null);
+
+                fragmentTransaction.commit();
+            }
+        });
+
+        listGrpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ListGroupsFragment listGroupsFragment = new ListGroupsFragment();
+                listGroupsFragment.setUsername(username);
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, listGroupsFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override

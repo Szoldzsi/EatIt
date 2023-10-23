@@ -5,4 +5,5 @@
     <string name="newRecipe">Uj recept</string>
     <string name="listRecipe">Listazas</string>
     <string name="logout">Kijelkentkezes</string>
+    <string name="title_activity_group_admin">GroupAdminActivity</string>
 </resources>

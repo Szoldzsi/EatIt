@@ -1,5 +1,6 @@
 package com.example.eatit;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -11,7 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,14 +29,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class RecipeListFragment extends Fragment{
 
     String username;
+    Spinner recSpinner;
     TextView tw2;
-
+    private DatabaseReference recipeNamesRef;
+    private Context context;
     ListView recList;
     private RecipeAdapter adapter;
     private ArrayList<Recipe> recipeList;
@@ -52,6 +59,16 @@ public class RecipeListFragment extends Fragment{
         }
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        recipeNamesRef = FirebaseDatabase.getInstance().getReference("Recipes").child(username);
+        context = requireContext();
+        // Now you can safely access the context here
+    }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,21 +78,39 @@ public class RecipeListFragment extends Fragment{
         //Deklarálás
         recList = view.findViewById(R.id.recipeList);
         recipeList = new ArrayList<>();
+        recSpinner = view.findViewById(R.id.recipeFilter);
+        populateFilterSpinner(recSpinner);
 
 
+/*
         //Ellenőrzés
         reference = FirebaseDatabase.getInstance().getReference("Recipes");
         reference.child(username).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (task.isSuccessful()){
+                    String selectedFilter = recSpinner.getSelectedItem().toString();
                     DataSnapshot dataSnapshot = task.getResult();
-                    fillList();
+                    fillList(recSpinner, selectedFilter);
                 }
                 else {
                     Toast.makeText(getActivity(), "Hiba", Toast.LENGTH_SHORT).show();
 
                 }
+            }
+        });
+*/
+
+        recSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String selectedSpecial = recSpinner.getSelectedItem().toString();
+                fillList(selectedSpecial);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Handle nothing selected, if needed
             }
         });
 
@@ -93,10 +128,93 @@ public class RecipeListFragment extends Fragment{
         return view;
     }
 
-    public void fillList(){
+    private void populateFilterSpinner(Spinner spinner) {
+        recipeNamesRef = FirebaseDatabase.getInstance().getReference("Recipes").child(username);
+        recipeNamesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<String> recipeNames = new ArrayList<>();
+                Set<String> uniqueRecipeSpecials = new HashSet<>(); // Use a set to track unique values
+
+                String manualEntry = "Szűrés";
+                recipeNames.add(manualEntry);
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String recipeSpecial = snapshot.child("recipeSpecial").getValue(String.class);
+                    if (recipeSpecial != null && !recipeSpecial.isEmpty() && !uniqueRecipeSpecials.contains(recipeSpecial)) {
+                        recipeNames.add(recipeSpecial);
+                        uniqueRecipeSpecials.add(recipeSpecial); // Add the special to the set
+                    }
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, recipeNames);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle any errors here
+            }
+        });
+    }
+
+    /*public void fillList(Spinner spinner, String selectedSpecial){
+
+        if("Szűrés".equals(recSpinner.getSelectedItem().toString())){
+            DatabaseReference recipesRef = FirebaseDatabase.getInstance().getReference("Recipes").child(username);
+            recipesRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    recipeList.clear();
+                    List<String> keys = new ArrayList<>();
+                    for (DataSnapshot recipeSnapshot : dataSnapshot.getChildren()) {
+                        Recipe recipe = recipeSnapshot.getValue(Recipe.class);
+                        recipe.setKey(recipeSnapshot.getKey());
+                        recipeList.add(recipe);
+                        keys.add(dataSnapshot.getKey());
+                    }
 
 
+                    //Adapter beállítás
+                    adapter = new RecipeAdapter(RecipeListFragment.this, recipeList);
+                    recList.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                }
+            });
+        }else{
+            recipeNamesRef = FirebaseDatabase.getInstance().getReference("Recipes").child(username);
+            recipeNamesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    List<String> recipeNames = new ArrayList<>();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Recipe recipe = snapshot.getValue(Recipe.class);
+                        if (recipe != null) {
+                            // Check if the recipe's special matches the selectedSpecial
+                            if (selectedSpecial.equals(recipe.getRecipeSpecial())) {
+                                recipeNames.add(recipe.getRecipeName());
+                            }
+                        }
+                    }
+                    adapter = new RecipeAdapter(RecipeListFragment.this, recipeList);
+                    recList.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Handle any errors here
+                }
+            });
+        }
+    }*/
+
+    public void fillList(String selectedSpecial) {
         DatabaseReference recipesRef = FirebaseDatabase.getInstance().getReference("Recipes").child(username);
         recipesRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -106,22 +224,27 @@ public class RecipeListFragment extends Fragment{
                 for (DataSnapshot recipeSnapshot : dataSnapshot.getChildren()) {
                     Recipe recipe = recipeSnapshot.getValue(Recipe.class);
                     recipe.setKey(recipeSnapshot.getKey());
-                    recipeList.add(recipe);
-                    keys.add(dataSnapshot.getKey());
+
+                    // If selectedSpecial is "Szűrés" or matches the recipe's special, add it
+                    if ("Szűrés".equals(selectedSpecial) || selectedSpecial.equals(recipe.getRecipeSpecial())) {
+                        recipeList.add(recipe);
+                        keys.add(dataSnapshot.getKey());
+                    }
                 }
 
-
-                //Adapter beállítás
+                // Adapter beállítás
                 adapter = new RecipeAdapter(RecipeListFragment.this, recipeList);
                 recList.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                // Handle any errors here
             }
         });
     }
+
 
     public void deleteRecipe(String recipeKey){
         DatabaseReference recipeRef = FirebaseDatabase.getInstance().getReference("Recipes").child(username).child(recipeKey);

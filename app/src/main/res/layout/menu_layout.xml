@@ -20,6 +20,24 @@
 
         <TableRow
             android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <CheckBox
+                android:id="@+id/existingMenuCB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Létező Receptből" />
+
+            <CheckBox
+                android:id="@+id/filterCB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Szűrés"
+                android:visibility="gone" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
@@ -73,6 +91,23 @@
                 android:layout_height="110dp"
                 android:ems="10"
                 android:inputType="textMultiLine" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <Spinner
+                android:id="@+id/recipeSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+            <Spinner
+                android:id="@+id/filterSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
         </TableRow>
 
     </TableLayout>

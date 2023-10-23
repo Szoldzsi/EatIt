@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".NewGroupFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Új csoport létrehozása"
+        android:textSize="30sp" />
+
+    <EditText
+        android:id="@+id/groupName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Csoport neve"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/createBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Csoport lérehozása" />
+
+</LinearLayout>
