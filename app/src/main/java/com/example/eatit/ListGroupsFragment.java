@@ -1,5 +1,6 @@
 package com.example.eatit;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -30,9 +32,8 @@ public class ListGroupsFragment extends Fragment {
     private DatabaseReference groupsRef;
     private ListView listView;
     private ArrayAdapter<String> adapter;
-
+    private List<GroupData> groupDataList;
     public ListGroupsFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -42,13 +43,13 @@ public class ListGroupsFragment extends Fragment {
             username = savedInstanceState.getString(KEY);
         }
         groupsRef = FirebaseDatabase.getInstance().getReference("Groups");
+        groupDataList = new ArrayList<>();
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_list_groups, container, false);
 
         listView = view.findViewById(R.id.groupsListView);
@@ -59,30 +60,35 @@ public class ListGroupsFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 adapter.clear();
+                groupDataList.clear();
 
                 List<GroupData> ownedGroups = new ArrayList<>();
                 List<GroupData> memberGroups = new ArrayList<>();
 
                 for (DataSnapshot groupSnapshot : dataSnapshot.getChildren()) {
                     String groupName = groupSnapshot.child("group_name").getValue(String.class);
+                    String groupOwner = groupSnapshot.child("owner").getValue(String.class);
 
-                    // Check if the current user is the owner of the group
                     if (isCurrentUserOwner(groupSnapshot, username)) {
-                        ownedGroups.add(new GroupData(groupName, groupSnapshot.getKey()));
+                        GroupData groupData = new GroupData(groupName, groupSnapshot.getKey(), groupOwner);
+                        ownedGroups.add(groupData);
+                        groupDataList.add(groupData);
                     }
 
                     // Check if the current user is a member of the group
                     if (groupSnapshot.child("members").hasChild(username)) {
-                        memberGroups.add(new GroupData(groupName, groupSnapshot.getKey()));
+                        if (groupSnapshot.child("members").child(username).getValue(Boolean.class)) {
+                            GroupData groupData = new GroupData(groupName, groupSnapshot.getKey(), groupOwner);
+                            memberGroups.add(groupData);
+                            groupDataList.add(groupData);
+                        }
                     }
                 }
 
-                // Display the owned groups first
                 for (GroupData group : ownedGroups) {
                     adapter.add(group.getGroupName());
                 }
 
-                // Then display the member groups
                 for (GroupData group : memberGroups) {
                     adapter.add(group.getGroupName());
                 }
@@ -92,9 +98,23 @@ public class ListGroupsFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Handle any errors here
             }
         });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                GroupData selectedGroup = groupDataList.get(position); // Use the list of GroupData
+                if (selectedGroup != null) {
+                    Intent intent = new Intent(requireContext(), GroupAdminActivity.class);
+                    intent.putExtra("groupKey", selectedGroup.getGroupKey());
+                    intent.putExtra("username", username);
+                    intent.putExtra("groupOwner", selectedGroup.getGroupOwner());
+                    startActivity(intent);
+                }
+            }
+        });
+
 
         return view;
     }
@@ -118,12 +138,17 @@ public class ListGroupsFragment extends Fragment {
 class GroupData {
     private String groupName;
     private String groupKey;
+    private String groupOwner;
 
-    public GroupData(String groupName, String groupKey) {
+    public GroupData(String groupName, String groupKey, String groupOwner) {
         this.groupName = groupName;
         this.groupKey = groupKey;
+        this.groupOwner = groupOwner;
     }
 
+    public String getGroupOwner() {
+        return groupOwner;
+    }
     public String getGroupName() {
         return groupName;
     }

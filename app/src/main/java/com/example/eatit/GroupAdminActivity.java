@@ -1,0 +1,138 @@
+package com.example.eatit;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+public class GroupAdminActivity extends AppCompatActivity {
+
+    Button listMembers, inviteMembers, groupMenu;
+    String groupKey, groupOwner, username;
+    EditText usernameInput;
+    private DatabaseReference groupsRef;
+    private DatabaseReference usersRef;
+    private AlertDialog inviteDialog;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_group_admin);
+
+        Intent intent = getIntent();
+        groupKey = intent.getStringExtra("groupKey");
+        groupOwner = intent.getStringExtra("groupOwner");
+        username = intent.getStringExtra("username");
+
+        listMembers = findViewById(R.id.listGrpMembers);
+        inviteMembers = findViewById(R.id.inviteGrpBtn);
+        groupMenu = findViewById(R.id.createGrpMenuBtn);
+        usernameInput = new EditText(this);
+
+        groupsRef = FirebaseDatabase.getInstance().getReference("Groups");
+        usersRef = FirebaseDatabase.getInstance().getReference("Users");
+
+        inviteMembers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showInviteDialog();
+            }
+        });
+
+        listMembers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(GroupAdminActivity.this, ListGroupMembersActivity.class);
+                intent1.putExtra("groupKey", groupKey);
+                intent1.putExtra("username", username);
+                startActivity(intent1);
+            }
+        });
+        groupMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(GroupAdminActivity.this, NewGroupMenuBeginningActivity.class);
+                intent1.putExtra("groupKey", groupKey);
+                intent1.putExtra("username", username);
+                startActivity(intent1);
+            }
+        });
+    }
+
+    private void showInviteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Csoporttag meghívása");
+        builder.setMessage("Meghívandó felhasználónév megadása:");
+
+        final EditText inputField = new EditText(this);
+        builder.setView(inputField);
+
+        builder.setPositiveButton("Meghívás", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final String invitedUsername = inputField.getText().toString().trim();
+                if (!TextUtils.isEmpty(invitedUsername)) {
+                    checkIfUsernameExists(invitedUsername);
+                } else {
+                    Toast.makeText(GroupAdminActivity.this, "Felhasználó mező nem lehet üres", Toast.LENGTH_SHORT).show();
+                }
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("Mégse", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        inviteDialog = builder.create();
+        inviteDialog.show();
+    }
+
+    private void checkIfUsernameExists(final String username) {
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean usernameExists = false;
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String storedUsername = userSnapshot.getValue(String.class);
+                    if (storedUsername != null && storedUsername.equals(username)) {
+                        // Username exists
+                        usernameExists = true;
+                        break;
+                    }
+                }
+
+                if (usernameExists) {
+                    groupsRef.child(groupKey).child("members").child(username).setValue(false);
+                    Toast.makeText(GroupAdminActivity.this, "Meghívó elküldve: " + username + " felhasználónak", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(GroupAdminActivity.this, "Ilyen felhasználó nem létezik", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("DatabaseError", databaseError.toString());
+                Toast.makeText(GroupAdminActivity.this, "Adatbázis hiba", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+}

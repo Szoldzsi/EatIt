@@ -68,7 +68,7 @@ public class NewGroupFragment extends Fragment {
                 groupRef.child("owner").setValue(username);
 
                 // Add the member (in this case, it can be the current user) to the members node
-                groupRef.child("members").child(username).setValue(true);
+                /*groupRef.child("members").child(username).setValue(true);*/
 
                 Toast.makeText(getActivity(), "Csoport sikeresen létrehozva!", Toast.LENGTH_SHORT).show();
             }
