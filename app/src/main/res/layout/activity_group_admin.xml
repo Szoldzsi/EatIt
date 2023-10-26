@@ -24,4 +24,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Csoportos Menü tervezése" />
+
+    <Button
+        android:id="@+id/listGroupMenuBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Csoportos menük listázása" />
+
+    <Button
+        android:id="@+id/removeGroupBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Csoport törlése" />
 </LinearLayout>

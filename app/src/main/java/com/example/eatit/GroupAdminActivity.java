@@ -21,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class GroupAdminActivity extends AppCompatActivity {
 
-    Button listMembers, inviteMembers, groupMenu;
+    Button listMembers, inviteMembers, groupMenu, listGrpMenus, deleteGroup;
     String groupKey, groupOwner, username;
     EditText usernameInput;
     private DatabaseReference groupsRef;
@@ -41,6 +41,8 @@ public class GroupAdminActivity extends AppCompatActivity {
         listMembers = findViewById(R.id.listGrpMembers);
         inviteMembers = findViewById(R.id.inviteGrpBtn);
         groupMenu = findViewById(R.id.createGrpMenuBtn);
+        listGrpMenus = findViewById(R.id.listGroupMenuBtn);
+        deleteGroup = findViewById(R.id.removeGroupBtn);
         usernameInput = new EditText(this);
 
         groupsRef = FirebaseDatabase.getInstance().getReference("Groups");
@@ -71,6 +73,40 @@ public class GroupAdminActivity extends AppCompatActivity {
                 startActivity(intent1);
             }
         });
+        listGrpMenus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(GroupAdminActivity.this, ListGroupMenus.class);
+                intent1.putExtra("groupKey", groupKey);
+                intent1.putExtra("username", username);
+                startActivity(intent1);
+            }
+        });
+        deleteGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Remove the group from the database
+                groupsRef.child(groupKey).removeValue(new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError == null) {
+                            // Group deleted successfully
+                            Toast.makeText(GroupAdminActivity.this, "Csoport sikeresen törölve.", Toast.LENGTH_SHORT).show();
+
+                            // Navigate back to MainActivity
+                            Intent mainIntent = new Intent(GroupAdminActivity.this, MainActivity.class);
+                            mainIntent.putExtra("username", username);
+                            startActivity(mainIntent);
+                        } else {
+                            // Handle the error if group deletion fails
+                            Log.e("DatabaseError", databaseError.toString());
+                            Toast.makeText(GroupAdminActivity.this, "Csoport törlése sikertelen.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+
     }
 
     private void showInviteDialog() {

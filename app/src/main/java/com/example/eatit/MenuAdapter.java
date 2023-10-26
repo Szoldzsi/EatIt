@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -37,6 +38,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     private String username;
     private DatabaseReference recipeNamesRef;
     private Context context;
+    Button removeBtn;
 
     public MenuAdapter(Context context,List<MenuClass> data, List<Calendar> formDates,String username) {
         this.context = context;
@@ -139,6 +141,17 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
             @Override
             public void afterTextChanged(Editable s) {}
+        });
+
+        holder.removeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Remove the corresponding form from the data list
+                if (position >= 0 && position < data.size()) {
+                    data.remove(position);
+                    notifyItemRemoved(position);
+                }
+            }
         });
 
         holder.etIngredients.addTextChangedListener(new TextWatcher() {
@@ -279,6 +292,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         CheckBox existingRecipeCB, filterCB;
         Spinner recipeSpinner, filterSpinner;
         TextView dateTextView;
+        Button removeBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -290,6 +304,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
             recipeSpinner = itemView.findViewById(R.id.recipeSpinner);
             filterCB = itemView.findViewById(R.id.filterCB);
             filterSpinner = itemView.findViewById(R.id.filterSpinner);
+            removeBtn = itemView.findViewById(R.id.removeBtn);
         }
     }
 }

@@ -52,4 +52,31 @@
         android:layout_height="wrap_content"
         android:text="Kezdés" />
 
+    <CheckBox
+        android:id="@+id/existingCB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Létező menü másolása" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <Spinner
+                android:id="@+id/listExistingSpinner"
+                android:layout_width="203dp"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/copyExistingBtn"
+                android:layout_width="201dp"
+                android:layout_height="wrap_content"
+                android:text="Button" />
+        </TableRow>
+    </TableLayout>
+
 </LinearLayout>

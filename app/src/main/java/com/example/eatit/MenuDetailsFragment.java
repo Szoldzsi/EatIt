@@ -103,10 +103,6 @@ public class MenuDetailsFragment extends Fragment {
 //                        menuSpecialTextView.append("Speciális: " + menuSpecial + "\n");
                         MenuClass menuDetailItem = new MenuClass(menu, menuIngredients, menuSpecial, dateKey);
                         menuDetailList.add(menuDetailItem);
-                        Log.d("MenuDetailsFragment", "Date: " + dateKey);
-                        Log.d("MenuDetailsFragment", "Menu: " + menu);
-                        Log.d("MenuDetailsFragment", "Ingredients: " + menuIngredients);
-                        Log.d("MenuDetailsFragment", "Special: " + menuSpecial);
 //                        String menuName, String menuSpecial, String menuIngredients, String menuDate
                     }
                     adapter = new MenuDetailsAdapter(getContext(), menuDetailList);
