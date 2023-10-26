@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,6 +41,8 @@ public class RecipeListFragment extends Fragment{
     Spinner recSpinner;
     TextView tw2;
     private DatabaseReference recipeNamesRef;
+    private long lastClickTime = 0;
+    private static final long DOUBLE_CLICK_TIME_DELTA = 300;
     private Context context;
     ListView recList;
     private RecipeAdapter adapter;
@@ -125,6 +128,25 @@ public class RecipeListFragment extends Fragment{
             }
         });
 
+        recList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                long clickTime = System.currentTimeMillis();
+                if (clickTime - lastClickTime < DOUBLE_CLICK_TIME_DELTA) {
+
+                    Recipe selectedRecipe = recipeList.get(position);
+                    String recipeKey = selectedRecipe.getKey();
+                    String special = selectedRecipe.getRecipeSpecial();
+                    String recipeName = selectedRecipe.getRecipeName();
+                    String ingredients = selectedRecipe.getRecipeIngredients();
+
+                    // Start RecipeFragment and pass the details in a Bundle
+                    startRecipeFragment(special, recipeName, ingredients, recipeKey);
+                }
+                lastClickTime = clickTime;
+            }
+        });
+
         return view;
     }
 
@@ -157,6 +179,22 @@ public class RecipeListFragment extends Fragment{
                 // Handle any errors here
             }
         });
+    }
+    private void startRecipeFragment(String special, String recipeName, String ingredients, String recipeKey) {
+        RecipeFragment recipeFragment = new RecipeFragment();
+        Bundle args = new Bundle();
+        args.putString("special", special);
+        args.putString("recipeName", recipeName);
+        args.putString("ingredients", ingredients);
+        args.putString("recipeKey", recipeKey);
+        recipeFragment.setArguments(args);
+        recipeFragment.setUsername(username);
+
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, recipeFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     /*public void fillList(Spinner spinner, String selectedSpecial){
@@ -225,7 +263,6 @@ public class RecipeListFragment extends Fragment{
                     Recipe recipe = recipeSnapshot.getValue(Recipe.class);
                     recipe.setKey(recipeSnapshot.getKey());
 
-                    // If selectedSpecial is "Szűrés" or matches the recipe's special, add it
                     if ("Szűrés".equals(selectedSpecial) || selectedSpecial.equals(recipe.getRecipeSpecial())) {
                         recipeList.add(recipe);
                         keys.add(dataSnapshot.getKey());

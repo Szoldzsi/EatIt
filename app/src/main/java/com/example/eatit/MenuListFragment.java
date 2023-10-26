@@ -82,7 +82,6 @@ public class MenuListFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle onCancelled event if needed
             }
         });
 

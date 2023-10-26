@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 
@@ -27,6 +28,10 @@ public class RecipeFragment extends Fragment {
     Button saveBtn;
 
     String username;
+    private String specialString;
+    private String recipeNameString;
+    private String ingredientsString;
+    private String recipeKey;
 
     private static final String KEY = "username";
 
@@ -53,9 +58,21 @@ public class RecipeFragment extends Fragment {
         recipeName = view.findViewById(R.id.recipeText);
         saveBtn = view.findViewById(R.id.saveBtn);
 
+        Bundle args = getArguments();
+        if (args != null) {
+            specialString = args.getString("special");
+            recipeNameString = args.getString("recipeName");
+            ingredientsString = args.getString("ingredients");
+            recipeKey = args.getString("recipeKey");
+
+            special.setText(specialString);
+            recipeName.setText(recipeNameString);
+            ingredients.setText(ingredientsString);
+        }
+
 //        tw.setText(username);
 
-        saveBtn.setOnClickListener(new View.OnClickListener() {
+        /*saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String recipe_Name = recipeName.getText().toString();
@@ -85,9 +102,73 @@ public class RecipeFragment extends Fragment {
                 }
 
             }
+        });*/
+
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String recipe_Name = recipeName.getText().toString();
+                String special_mark = special.getText().toString();
+                String ingredients_list = ingredients.getText().toString();
+
+                if (TextUtils.isEmpty(recipe_Name)) {
+                    Toast.makeText(getActivity(), "Hiányzó recept név!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Recipe recipe = new Recipe(recipe_Name, special_mark, ingredients_list);
+
+                try {
+                    if (recipeKey != null) {
+                        updateRecipe(recipeKey, recipe);
+                    } else {
+                        createNewRecipe(recipe);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         });
 
         return view;
+    }
+
+    private void updateRecipe(String recipeKey, Recipe recipe) {
+        if (recipeKey != null && !recipeKey.isEmpty()) {
+            // Update the recipe in Firebase
+            DatabaseReference recipeRef = FirebaseDatabase.getInstance().getReference("Recipes").child(username).child(recipeKey);
+            recipeRef.setValue(recipe)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(getActivity(), "Recept sikeresen frissítve!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getActivity(), "Hiba a frissítés során!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        } else {
+            // Handle the case where recipeKey is null or empty
+            Toast.makeText(getActivity(), "RecipeKey is missing!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void createNewRecipe(Recipe recipe) {
+        // Create a new recipe in Firebase
+        DatabaseReference recipesRef;
+        recipesRef = FirebaseDatabase.getInstance().getReference("Recipes").child(username);
+        recipesRef.push().setValue(recipe)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getActivity(), "Recept sikeresen elmentve!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), "Hiba a mentés során!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     public void setUsername(String username){

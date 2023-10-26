@@ -22,7 +22,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class ListGroupsFragment extends Fragment {
@@ -30,9 +33,10 @@ public class ListGroupsFragment extends Fragment {
     private static final String KEY = "username";
     String username;
     private DatabaseReference groupsRef;
-    private ListView listView;
-    private ArrayAdapter<String> adapter;
+    private ListView listView, listViewMember;
+    private ArrayAdapter<String> adapter, adapter2;
     private List<GroupData> groupDataList;
+    private Map<String, GroupData> groupNameToGroupDataMap = new HashMap<>();
     public ListGroupsFragment() {
     }
 
@@ -53,43 +57,34 @@ public class ListGroupsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_list_groups, container, false);
 
         listView = view.findViewById(R.id.groupsListView);
+        listViewMember = view.findViewById(R.id.groupsListViewMember);
         adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1);
+        adapter2 = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1);
         listView.setAdapter(adapter);
+        listViewMember.setAdapter(adapter2);
 
         groupsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                adapter.clear();
                 groupDataList.clear();
-
-                List<GroupData> ownedGroups = new ArrayList<>();
-                List<GroupData> memberGroups = new ArrayList<>();
 
                 for (DataSnapshot groupSnapshot : dataSnapshot.getChildren()) {
                     String groupName = groupSnapshot.child("group_name").getValue(String.class);
                     String groupOwner = groupSnapshot.child("owner").getValue(String.class);
 
+                    GroupData groupData = new GroupData(groupName, groupSnapshot.getKey(), groupOwner);
+
                     if (isCurrentUserOwner(groupSnapshot, username)) {
-                        GroupData groupData = new GroupData(groupName, groupSnapshot.getKey(), groupOwner);
-                        ownedGroups.add(groupData);
-                        groupDataList.add(groupData);
-                    }
-
-                    // Check if the current user is a member of the group
-                    if (groupSnapshot.child("members").hasChild(username)) {
-                        if (groupSnapshot.child("members").child(username).getValue(Boolean.class)) {
-                            GroupData groupData = new GroupData(groupName, groupSnapshot.getKey(), groupOwner);
-                            memberGroups.add(groupData);
-                            groupDataList.add(groupData);
-                        }
+                        groupDataList.add(0, groupData); // Add to the beginning of the list (owned groups)
+                    } else if (groupSnapshot.child("members").hasChild(username)
+                            && groupSnapshot.child("members").child(username).getValue(Boolean.class)) {
+                        groupDataList.add(groupData); // Add to the end of the list (member groups)
                     }
                 }
 
-                for (GroupData group : ownedGroups) {
-                    adapter.add(group.getGroupName());
-                }
+                adapter.clear();
 
-                for (GroupData group : memberGroups) {
+                for (GroupData group : groupDataList) {
                     adapter.add(group.getGroupName());
                 }
 
@@ -101,16 +96,44 @@ public class ListGroupsFragment extends Fragment {
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+/*        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                GroupData selectedGroup = groupDataList.get(position); // Use the list of GroupData
+                GroupData selectedGroup = groupDataList.get(position);
                 if (selectedGroup != null) {
                     Intent intent = new Intent(requireContext(), GroupAdminActivity.class);
                     intent.putExtra("groupKey", selectedGroup.getGroupKey());
                     intent.putExtra("username", username);
                     intent.putExtra("groupOwner", selectedGroup.getGroupOwner());
                     startActivity(intent);
+                }
+            }
+        });*/
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                GroupData selectedGroup = groupDataList.get(position);
+                if (selectedGroup != null) {
+                    // Check if the current user is the owner of the group
+                    String currentUsername = username; // Implement this to get the current user's username
+                    Log.d("Group_teszt", selectedGroup.getGroupName());
+
+                    if (username.equals(selectedGroup.getGroupOwner())) {
+                        // Current user is the owner, start GroupAdminActivity
+                        Intent intent = new Intent(requireContext(), GroupAdminActivity.class);
+                        intent.putExtra("groupKey", selectedGroup.getGroupKey());
+                        intent.putExtra("username", username);
+                        intent.putExtra("groupOwner", selectedGroup.getGroupOwner());
+                        startActivity(intent);
+                    } else {
+                        // Current user is not the owner, start GroupUserActivity
+                        Intent intent = new Intent(requireContext(), GroupUserActivity.class);
+                        intent.putExtra("groupKey", selectedGroup.getGroupKey());
+                        intent.putExtra("username", username);
+                        intent.putExtra("groupOwner", selectedGroup.getGroupOwner());
+                        startActivity(intent);
+                    }
                 }
             }
         });
