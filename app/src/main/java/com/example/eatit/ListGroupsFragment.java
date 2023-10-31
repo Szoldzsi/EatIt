@@ -127,7 +127,6 @@ public class ListGroupsFragment extends Fragment {
                         intent.putExtra("groupOwner", selectedGroup.getGroupOwner());
                         startActivity(intent);
                     } else {
-                        // Current user is not the owner, start GroupUserActivity
                         Intent intent = new Intent(requireContext(), GroupUserActivity.class);
                         intent.putExtra("groupKey", selectedGroup.getGroupKey());
                         intent.putExtra("username", username);

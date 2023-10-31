@@ -67,13 +67,38 @@ public class ListGroupMenus extends AppCompatActivity {
             }
         });
 
-        groupMenusList.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+        /*groupMenusList.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
             public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
                 AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
                 String selectedMember = adapter.getItem(info.position);
                 menu.setHeaderTitle("Törlés " + selectedMember);
                 menu.add(android.view.Menu.NONE, 1, Menu.NONE, "Menü törlése");
+            }
+        });*/
+        groupsRef.child(grpKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String groupOwner = dataSnapshot.child("owner").getValue(String.class);
+
+                    if (username.equals(groupOwner)) {
+                        groupMenusList.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+                            @Override
+                            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+                                String selectedMember = adapter.getItem(info.position);
+                                menu.setHeaderTitle("Törlés " + selectedMember);
+                                menu.add(android.view.Menu.NONE, 1, Menu.NONE, "Menü törlése");
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle errors
             }
         });
     }

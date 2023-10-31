@@ -31,6 +31,12 @@
         android:text="Csoportok listázása" />
 
     <Button
+        android:id="@+id/invitesBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Meghívók" />
+
+    <Button
         android:id="@+id/logoutButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

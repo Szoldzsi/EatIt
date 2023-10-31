@@ -5,10 +5,13 @@ import static androidx.core.content.ContentProviderCompat.requireContext;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +33,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
      BottomNavigationView bottomNavigationView;
      private static final String SELECTED_KEY = "selectedItemId";
      private int selectedItemId;
+    private static final int REQUEST_NOTIFICATION_PERMISSION = 1001;
 
     ArrayList<String> recipeArrayList;
 
@@ -51,6 +59,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_BOOT_COMPLETED)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, request the permission
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_BOOT_COMPLETED}, REQUEST_NOTIFICATION_PERMISSION);
+        }
 
         tw = findViewById(R.id.textView3);
         logout = findViewById(R.id.logoutBtn);

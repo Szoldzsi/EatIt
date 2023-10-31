@@ -18,11 +18,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 
 public class GroupAdminActivity extends AppCompatActivity {
 
     Button listMembers, inviteMembers, groupMenu, listGrpMenus, deleteGroup;
-    String groupKey, groupOwner, username;
+    String groupKey, groupOwner, username, groupName;
     EditText usernameInput;
     private DatabaseReference groupsRef;
     private DatabaseReference usersRef;
@@ -47,6 +49,20 @@ public class GroupAdminActivity extends AppCompatActivity {
 
         groupsRef = FirebaseDatabase.getInstance().getReference("Groups");
         usersRef = FirebaseDatabase.getInstance().getReference("Users");
+
+        groupsRef.child(groupKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    groupName = dataSnapshot.child("group_name").getValue(String.class);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("DatabaseError", databaseError.toString());
+            }
+        });
 
         inviteMembers.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +138,7 @@ public class GroupAdminActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 final String invitedUsername = inputField.getText().toString().trim();
                 if (!TextUtils.isEmpty(invitedUsername)) {
-                    checkIfUsernameExists(invitedUsername);
+                    checkIfUsernameExists(invitedUsername, groupName);
                 } else {
                     Toast.makeText(GroupAdminActivity.this, "Felhasználó mező nem lehet üres", Toast.LENGTH_SHORT).show();
                 }
@@ -141,14 +157,14 @@ public class GroupAdminActivity extends AppCompatActivity {
         inviteDialog.show();
     }
 
-    private void checkIfUsernameExists(final String username) {
+    private void checkIfUsernameExists(final String invitedUsername, final String groupName) {
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 boolean usernameExists = false;
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     String storedUsername = userSnapshot.getValue(String.class);
-                    if (storedUsername != null && storedUsername.equals(username)) {
+                    if (storedUsername != null && storedUsername.equals(invitedUsername)) {
                         // Username exists
                         usernameExists = true;
                         break;
@@ -156,8 +172,11 @@ public class GroupAdminActivity extends AppCompatActivity {
                 }
 
                 if (usernameExists) {
-                    groupsRef.child(groupKey).child("members").child(username).setValue(false);
-                    Toast.makeText(GroupAdminActivity.this, "Meghívó elküldve: " + username + " felhasználónak", Toast.LENGTH_SHORT).show();
+                    groupsRef.child(groupKey).child("members").child(invitedUsername).setValue(false);
+
+                    sendNotification(invitedUsername, groupName);
+
+                    Toast.makeText(GroupAdminActivity.this, "Meghívó elküldve: " + invitedUsername + " felhasználónak", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(GroupAdminActivity.this, "Ilyen felhasználó nem létezik", Toast.LENGTH_SHORT).show();
                 }
@@ -170,5 +189,44 @@ public class GroupAdminActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void sendNotification(String invitedUsername, String groupName) {
+        DatabaseReference tokensRef = FirebaseDatabase.getInstance().getReference("Tokens");
+        tokensRef.child(invitedUsername).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String fcmToken = dataSnapshot.getValue(String.class);
+                if (fcmToken != null) {
+                    String notificationTitle = "Meghívó a " + groupName + " csoportba";
+                    String notificationBody = "Meghívót kaptál, hogy csatlakozz a " + groupName + " nevű csoportba.";
+
+                    sendFCMNotification(fcmToken, notificationTitle, notificationBody);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("DatabaseError", databaseError.toString());
+            }
+        });
+    }
+
+    private void sendFCMNotification(String fcmToken, String title, String message) {
+        // Implement the logic to send an FCM notification using the provided token, title, and message
+        // This logic requires a server-side implementation that communicates with the FCM API
+        // It's usually done on a secure server and can't be directly executed on the client-side due to security restrictions.
+        // This could involve using Cloud Functions for Firebase, or a custom backend server to trigger the notification.
+        // Server implementation is necessary to handle FCM securely.
+        // Refer to the Firebase Cloud Messaging documentation for more details on how to send FCM messages.
+        // This code should not be executed directly on the client-side Android application.
+        RemoteMessage notification = new RemoteMessage.Builder(fcmToken + "@fcm.googleapis.com")
+                .setMessageId(Integer.toString(0))
+                .addData("title", title)
+                .addData("body", message)
+                .build();
+
+        FirebaseMessaging.getInstance().send(notification);
+    }
+
 
 }
