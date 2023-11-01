@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +26,7 @@ public class GroupAdminActivity extends AppCompatActivity {
 
     Button listMembers, inviteMembers, groupMenu, listGrpMenus, deleteGroup;
     String groupKey, groupOwner, username, groupName;
+    TextView groupNameTV;
     EditText usernameInput;
     private DatabaseReference groupsRef;
     private DatabaseReference usersRef;
@@ -45,6 +47,7 @@ public class GroupAdminActivity extends AppCompatActivity {
         groupMenu = findViewById(R.id.createGrpMenuBtn);
         listGrpMenus = findViewById(R.id.listGroupMenuBtn);
         deleteGroup = findViewById(R.id.removeGroupBtn);
+        groupNameTV = findViewById(R.id.groupNameTV);
         usernameInput = new EditText(this);
 
         groupsRef = FirebaseDatabase.getInstance().getReference("Groups");
@@ -55,6 +58,7 @@ public class GroupAdminActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     groupName = dataSnapshot.child("group_name").getValue(String.class);
+                    groupNameTV.setText(groupName);
                 }
             }
 
@@ -109,15 +113,12 @@ public class GroupAdminActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                         if (databaseError == null) {
-                            // Group deleted successfully
                             Toast.makeText(GroupAdminActivity.this, "Csoport sikeresen törölve.", Toast.LENGTH_SHORT).show();
 
-                            // Navigate back to MainActivity
                             Intent mainIntent = new Intent(GroupAdminActivity.this, MainActivity.class);
                             mainIntent.putExtra("username", username);
                             startActivity(mainIntent);
                         } else {
-                            // Handle the error if group deletion fails
                             Log.e("DatabaseError", databaseError.toString());
                             Toast.makeText(GroupAdminActivity.this, "Csoport törlése sikertelen.", Toast.LENGTH_SHORT).show();
                         }

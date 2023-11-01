@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:screenOrientation="portrait"
     tools:context=".MainActivity"
-    android:screenOrientation="portrait">
+    android:backgroundTint="#80FFFFFF"
+    android:backgroundTintMode="src_over">
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:elevation="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:elevation="1dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/loading_view"
@@ -25,18 +27,20 @@
         android:layout_height="734dp"
         android:background="@android:color/transparent"
         android:clickable="true"
+        android:elevation="2dp"
         android:focusable="true"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:elevation="2dp"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:paddingBottom="30dp"
+        android:textAlignment="center"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,37 +51,37 @@
         android:layout_width="135dp"
         android:layout_height="50dp"
         android:layout_marginBottom="4dp"
+        android:elevation="5dp"
         android:text="Kijelentkezés"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        android:elevation="5dp"
-        android:visibility="gone"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/recipeBtn"
         android:layout_width="135dp"
         android:layout_height="50dp"
         android:layout_marginBottom="4dp"
-        android:text="Új recept"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/logoutBtn"
         android:elevation="5dp"
-        android:visibility="gone"/>
+        android:text="Új recept"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/logoutBtn" />
 
     <Button
         android:id="@+id/recipeListBtn"
         android:layout_width="135dp"
         android:layout_height="50dp"
         android:layout_marginBottom="4dp"
+        android:elevation="5dp"
         android:text="Receptek listázása"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/recipeBtn"
-        android:elevation="5dp"
-        android:visibility="gone"/>
+        app:layout_constraintStart_toEndOf="@+id/recipeBtn" />
 
     <FrameLayout
         android:id="@+id/fragment_container"
@@ -96,12 +100,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        app:itemIconTint="@drawable/color_setting"
+        app:itemRippleColor="@color/transparent"
+        app:itemTextColor="@drawable/color_setting"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@layout/bottom_nav_menu"
-        app:itemIconTint="@drawable/color_setting"
-        app:itemTextColor="@drawable/color_setting"
-        app:itemRippleColor="@color/transparent"/>
+        app:menu="@layout/bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

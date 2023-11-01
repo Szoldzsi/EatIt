@@ -1,53 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".NewMenuFragment" >
+    tools:context=".NewMenuFragment">
 
     <TextView
         android:id="@+id/groupTV"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Új menü tervezése"
-        android:textSize="30sp" />
-
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Időtartam megadása"
-        android:textSize="20sp" />
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/napokTF"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="Menü neve"
-        android:inputType="text" />
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/groupTV" />
 
     <EditText
         android:id="@+id/datumTF"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
         android:ems="10"
         android:hint="Kezdő dátum megadása"
-        android:inputType="date" />
+        android:inputType="date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/napokTF" />
 
     <EditText
         android:id="@+id/idotartamTF"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
         android:ems="10"
         android:hint="Időtartam"
-        android:inputType="number" />
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/datumTF" />
 
     <Button
         android:id="@+id/startBtn"
-        android:layout_width="match_parent"
+        style="@style/gomb"
+        android:layout_width="245dp"
         android:layout_height="wrap_content"
-        android:text="Kezdés" />
+        android:layout_marginStart="80dp"
+        android:text="Kezdés"
+        app:layout_constraintStart_toStartOf="@+id/idotartamTF"
+        app:layout_constraintTop_toBottomOf="@+id/idotartamTF" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

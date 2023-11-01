@@ -9,7 +9,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -84,6 +86,7 @@ public class RecipeListFragment extends Fragment{
         recSpinner = view.findViewById(R.id.recipeFilter);
         populateFilterSpinner(recSpinner);
 
+        registerForContextMenu(recList);
 
 /*
         //Ellenőrzés
@@ -120,15 +123,12 @@ public class RecipeListFragment extends Fragment{
         recList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Recipe selectedRecipe = recipeList.get(position);
-                String recipeKey = selectedRecipe.getKey();
-                Log.d("kulcs",  recipeKey);
-                deleteRecipe(recipeKey);
-                return true;
+                // Return false to let the context menu be displayed
+                return false;
             }
         });
 
-        recList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+/*        recList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 long clickTime = System.currentTimeMillis();
@@ -145,9 +145,43 @@ public class RecipeListFragment extends Fragment{
                 }
                 lastClickTime = clickTime;
             }
-        });
+        });*/
 
         return view;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if (v.getId() == R.id.recipeList) {
+            menu.setHeaderTitle("Lehetőségek");
+            menu.add(0, v.getId(), 0, "Szerkesztés");
+            menu.add(0, v.getId(), 0, "Törlés");
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getTitle().equals("Törlés")) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            int index = info.position;
+            Recipe selectedRecipe = recipeList.get(index);
+            String recipeKey = selectedRecipe.getKey();
+            deleteRecipe(recipeKey);
+            return true;
+        }
+        else if (item.getTitle().equals("Szerkesztés")) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            int index = info.position;
+            Recipe selectedRecipe = recipeList.get(index);
+            String recipeKey = selectedRecipe.getKey();
+            String special = selectedRecipe.getRecipeSpecial();
+            String recipeName = selectedRecipe.getRecipeName();
+            String ingredients = selectedRecipe.getRecipeIngredients();
+            startRecipeFragment(special, recipeName, ingredients, recipeKey);
+            return true;}
+
+        return super.onContextItemSelected(item);
     }
 
     private void populateFilterSpinner(Spinner spinner) {
@@ -290,14 +324,14 @@ public class RecipeListFragment extends Fragment{
                     @Override
                     public void onSuccess(Void aVoid) {
 
-                        Toast.makeText(getActivity(), "Recipe deleted", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Recept törölve", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         // Failed to delete recipe
-                        Toast.makeText(getActivity(), "Failed to delete recipe", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Hiba a recept törlése közben", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

@@ -58,7 +58,6 @@ public class ListGroupMenus extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedMenuName = menuNames.get(position);
 
-                // Create an intent to start ListGroupMenuDetails activity
                 Intent intent = new Intent(ListGroupMenus.this, ListGroupMenuDetails.class);
                 intent.putExtra("groupKey", grpKey);
                 intent.putExtra("username", username);

@@ -76,17 +76,17 @@ public class RegisterActivity extends AppCompatActivity {
                 final String username = reg_usnm.getText().toString().trim();
 
                 if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(RegisterActivity.this, "Hianyzo email", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Hiányzó email", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (TextUtils.isEmpty(psw)) {
-                    Toast.makeText(RegisterActivity.this, "Hianyzo jelszo", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Hiányzó jelszó", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (TextUtils.isEmpty(username)) {
-                    Toast.makeText(RegisterActivity.this, "Hianyzo Felhasznalonev", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Hiányzó Felhasználónév", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -94,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
-                            Toast.makeText(RegisterActivity.this, "Felhasznaloi nev foglalt", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "Felhasználói név foglalt", Toast.LENGTH_SHORT).show();
                         } else {
                             mAuth.createUserWithEmailAndPassword(email, psw).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -107,44 +107,18 @@ public class RegisterActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         if (task.isSuccessful()) {
-                                                            Toast.makeText(RegisterActivity.this, "Sikeres regisztracio!", Toast.LENGTH_SHORT).show();
-                                                            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<String> task) {
-                                                                    if (task.isSuccessful()) {
-                                                                        String fcmToken = task.getResult();
-
-                                                                        // Save FCM token in the Tokens node along with the username
-                                                                        if (fcmToken != null) {
-                                                                            DatabaseReference tokensRef = FirebaseDatabase.getInstance().getReference("Tokens");
-                                                                            tokensRef.child(username).setValue(fcmToken)
-                                                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                        @Override
-                                                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                                                            if (task.isSuccessful()) {
-                                                                                                Toast.makeText(RegisterActivity.this, "FCM token saved for " + username, Toast.LENGTH_SHORT).show();
-                                                                                            } else {
-                                                                                                Toast.makeText(RegisterActivity.this, "Failed to save FCM token", Toast.LENGTH_SHORT).show();
-                                                                                            }
-                                                                                        }
-                                                                                    });
-                                                                        }
-                                                                    } else {
-                                                                        Toast.makeText(RegisterActivity.this, "Failed to retrieve FCM token", Toast.LENGTH_SHORT).show();
-                                                                    }
-                                                                }
-                                                            });
+                                                            Toast.makeText(RegisterActivity.this, "Sikeres regisztráció!", Toast.LENGTH_SHORT).show();
                                                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                                             startActivity(intent);
                                                             finish();
                                                         } else {
-                                                            Toast.makeText(RegisterActivity.this, "Sikertelen regisztracio!", Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(RegisterActivity.this, "Sikertelen regisztráció!", Toast.LENGTH_SHORT).show();
                                                         }
                                                     }
                                                 });
 
                                     } else {
-                                        Toast.makeText(RegisterActivity.this, "Sikertelen regisztracio!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(RegisterActivity.this, "Sikertelen regisztráció!", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });

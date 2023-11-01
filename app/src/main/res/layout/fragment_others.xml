@@ -1,44 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".OthersFragment" >
+    tools:context=".OthersFragment">
 
     <Button
         android:id="@+id/newRecipeBtn"
-        android:layout_width="match_parent"
+        style="@style/gomb"
+        android:layout_width="265dp"
         android:layout_height="wrap_content"
-        android:text="Új recept hozzáadása" />
-
-    <Button
-        android:id="@+id/recListBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Receptek listázása" />
-
-    <Button
-        android:id="@+id/createGroupBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Csoport létrehozása" />
-
-    <Button
-        android:id="@+id/listGroupBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Csoportok listázása" />
+        android:layout_marginTop="112dp"
+        android:text="Új recept hozzáadása"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.315"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/invitesBtn"
-        android:layout_width="match_parent"
+        style="@style/gomb"
+        android:layout_width="265dp"
         android:layout_height="wrap_content"
-        android:text="Meghívók" />
+        android:text="Meghívók"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.315"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/listGroupBtn" />
+
+    <Button
+        android:id="@+id/recListBtn"
+        style="@style/gomb"
+        android:layout_width="265dp"
+        android:layout_height="wrap_content"
+        android:text="Receptek listázása"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.315"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newRecipeBtn" />
+
+    <Button
+        android:id="@+id/createGroupBtn"
+        style="@style/gomb"
+        android:layout_width="265dp"
+        android:layout_height="wrap_content"
+        android:text="Csoport létrehozása"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.315"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recListBtn" />
+
+    <Button
+        android:id="@+id/listGroupBtn"
+        style="@style/gomb"
+        android:layout_width="265dp"
+        android:layout_height="wrap_content"
+        android:text="Csoportok listázása"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.315"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/createGroupBtn" />
 
     <Button
         android:id="@+id/logoutButton"
-        android:layout_width="match_parent"
+        style="@style/gomb"
+        android:layout_width="265dp"
         android:layout_height="wrap_content"
-        android:text="Kijelentkezés" />
-</LinearLayout>
+        android:text="Kijelentkezés"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.315"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/invitesBtn"
+        app:layout_constraintVertical_bias="0.0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

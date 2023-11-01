@@ -75,10 +75,10 @@ public class ListGroupsFragment extends Fragment {
                     GroupData groupData = new GroupData(groupName, groupSnapshot.getKey(), groupOwner);
 
                     if (isCurrentUserOwner(groupSnapshot, username)) {
-                        groupDataList.add(0, groupData); // Add to the beginning of the list (owned groups)
+                        groupDataList.add(0, groupData);
                     } else if (groupSnapshot.child("members").hasChild(username)
                             && groupSnapshot.child("members").child(username).getValue(Boolean.class)) {
-                        groupDataList.add(groupData); // Add to the end of the list (member groups)
+                        groupDataList.add(groupData);
                     }
                 }
 
@@ -115,12 +115,10 @@ public class ListGroupsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 GroupData selectedGroup = groupDataList.get(position);
                 if (selectedGroup != null) {
-                    // Check if the current user is the owner of the group
-                    String currentUsername = username; // Implement this to get the current user's username
+                    String currentUsername = username;
                     Log.d("Group_teszt", selectedGroup.getGroupName());
 
                     if (username.equals(selectedGroup.getGroupOwner())) {
-                        // Current user is the owner, start GroupAdminActivity
                         Intent intent = new Intent(requireContext(), GroupAdminActivity.class);
                         intent.putExtra("groupKey", selectedGroup.getGroupKey());
                         intent.putExtra("username", username);
