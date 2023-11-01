@@ -62,7 +62,7 @@ public class NewMenuFragment extends Fragment {
                     Date startDate = dateFormat.parse(datStr);
                     Intent intent = new Intent(getContext(), NewMenuActivity.class);
 
-                    intent.putExtra("username",tw.getText().toString());
+                    intent.putExtra("username",username);
                     intent.putExtra("name", intStr);
                     intent.putExtra("startDate", startDate);
                     intent.putExtra("duration", durat);

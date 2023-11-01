@@ -53,7 +53,6 @@ public class ListGroupMembersActivity extends AppCompatActivity {
             }
         });
 
-        // Load and display group members
         loadGroupMembers();
     }
 

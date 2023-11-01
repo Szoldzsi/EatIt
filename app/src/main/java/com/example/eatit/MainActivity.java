@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 if (task.isSuccessful()){
                     DataSnapshot dataSnapshot = task.getResult();
                     username = String.valueOf(dataSnapshot.getValue());
-                    tw.setText("EatIt!");
+                    tw.setText("Eat It!");
                     progressBar.setVisibility(View.INVISIBLE);
                     progressBar.setIndeterminate(false);
                     loadingView.setVisibility(View.GONE);

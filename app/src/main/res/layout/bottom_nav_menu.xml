@@ -1,5 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <item
         android:id="@+id/navigation_list"
@@ -15,7 +16,7 @@
 
     <item
         android:id="@+id/navigation_logout"
-        android:icon="@drawable/logouticon"
+        android:icon="@drawable/menu"
         android:title="@string/logout"
         app:showAsAction="ifRoom" />
 

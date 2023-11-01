@@ -9,15 +9,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class GroupUserActivity extends AppCompatActivity {
     Button listGrpMenusUser, exitGrpBtn;
-    String groupKey, groupOwner, username;
+    String groupKey, groupOwner, username, groupName;
+    TextView groupNameTV;
     private DatabaseReference groupsRef;
 
     @Override
@@ -33,6 +37,22 @@ public class GroupUserActivity extends AppCompatActivity {
 
         listGrpMenusUser = findViewById(R.id.listGrpMenusUser);
         exitGrpBtn = findViewById(R.id.exitGroupBtn);
+        groupNameTV = findViewById(R.id.userGrpNameTV);
+
+        groupsRef.child(groupKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    groupName = dataSnapshot.child("group_name").getValue(String.class);
+                    groupNameTV.setText(groupName);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("DatabaseError", databaseError.toString());
+            }
+        });
 
         listGrpMenusUser.setOnClickListener(new View.OnClickListener() {
             @Override

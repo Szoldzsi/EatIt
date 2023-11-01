@@ -1,82 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".NewGroupMenuBeginningActivity">
+    tools:context=".NewGroupMenuBeginningActivity"
+    android:background="@drawable/backgroundactivity"
+>
 
 
     <TextView
         android:id="@+id/groupTV"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="Új csoportos menü tervezése"
-        android:textSize="30sp" />
-
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Időtartam megadása"
-        android:textSize="20sp" />
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/napokgrpTF"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Menü neve"
-        android:inputType="text" />
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/groupTV" />
 
     <EditText
         android:id="@+id/datumgrpTF"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Kezdő dátum megadása"
-        android:inputType="date" />
+        android:inputType="date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/napokgrpTF" />
 
     <EditText
         android:id="@+id/idotartamgrpTF"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Időtartam"
-        android:inputType="number" />
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/datumgrpTF" />
 
     <Button
         android:id="@+id/startgrpBtn"
-        android:layout_width="match_parent"
+        style="@style/gomb"
+        android:layout_width="265dp"
         android:layout_height="wrap_content"
-        android:text="Kezdés" />
+        android:text="Kezdés"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/idotartamgrpTF" />
 
     <CheckBox
         android:id="@+id/existingCB"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Létező menü másolása" />
+        android:text="Létező menü másolása"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/startgrpBtn" />
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+    <Spinner
+        android:id="@+id/listExistingSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@+id/copyExistingBtn"
+        app:layout_constraintEnd_toStartOf="@+id/copyExistingBtn"
+        app:layout_constraintStart_toStartOf="parent" />
 
-            <Spinner
-                android:id="@+id/listExistingSpinner"
-                android:layout_width="203dp"
-                android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/copyExistingBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="7dp"
+        android:text="Létező menü másolása"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/listExistingSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/existingCB"
+        style="@style/gomb"/>
 
-            <Button
-                android:id="@+id/copyExistingBtn"
-                android:layout_width="201dp"
-                android:layout_height="wrap_content"
-                android:text="Button" />
-        </TableRow>
-    </TableLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

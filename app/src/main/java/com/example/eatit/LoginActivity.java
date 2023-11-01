@@ -71,12 +71,12 @@ public class LoginActivity extends AppCompatActivity {
                 log_email = String.valueOf(email.getText());
                 log_psw = String.valueOf(psw.getText());
                 if (TextUtils.isEmpty(log_email)){
-                    Toast.makeText(LoginActivity.this, "Hianyzo email", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Hiányzó email", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (TextUtils.isEmpty(log_psw)){
-                    Toast.makeText(LoginActivity.this, "Hianyzo jelszo", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Hiányzó jelszó", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -84,14 +84,14 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
-                            Toast.makeText(LoginActivity.this, "Sikeres bejelentkezes", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Sikeres bejelentkezés", Toast.LENGTH_SHORT).show();
                             reference = FirebaseDatabase.getInstance().getReference("Users");
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
                             finish();
                         }
                         else{
-                            Toast.makeText(LoginActivity.this, "Sikertelen azonositas", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Sikertelen azonosítás", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
