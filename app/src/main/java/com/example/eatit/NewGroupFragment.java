@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -57,20 +58,22 @@ public class NewGroupFragment extends Fragment {
                     return;
                 }
 
-                // Generate a unique group ID (key) using push()
                 DatabaseReference groupRef = FirebaseDatabase.getInstance().getReference("Groups").push();
                 String groupID = groupRef.getKey();
 
-                // Set the group name
                 groupRef.child("group_name").setValue(grpName);
 
-                // Set the owner of the group (in this case, it can be the current user)
                 groupRef.child("owner").setValue(username);
 
-                // Add the member (in this case, it can be the current user) to the members node
-                /*groupRef.child("members").child(username).setValue(true);*/
 
                 Toast.makeText(getActivity(), "Csoport sikeresen létrehozva!", Toast.LENGTH_SHORT).show();
+
+                OthersFragment othersFragment = new OthersFragment();
+                othersFragment.setUsername(username);
+                FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, othersFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
 

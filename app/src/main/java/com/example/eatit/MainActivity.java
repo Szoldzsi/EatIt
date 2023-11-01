@@ -5,10 +5,13 @@ import static androidx.core.content.ContentProviderCompat.requireContext;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +33,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -79,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 if (task.isSuccessful()){
                     DataSnapshot dataSnapshot = task.getResult();
                     username = String.valueOf(dataSnapshot.getValue());
-                    tw.setText(username);
+                    tw.setText("EatIt!");
                     progressBar.setVisibility(View.INVISIBLE);
                     progressBar.setIndeterminate(false);
                     loadingView.setVisibility(View.GONE);

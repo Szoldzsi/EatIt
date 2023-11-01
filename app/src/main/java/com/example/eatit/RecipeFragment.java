@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -127,6 +128,12 @@ public class RecipeFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                OthersFragment othersFragment = new OthersFragment();
+                othersFragment.setUsername(username);
+                FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, othersFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
 

@@ -2,8 +2,8 @@
     <string name="app_name">EatIt</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="newRecipe">Uj recept</string>
-    <string name="listRecipe">Listazas</string>
-    <string name="logout">Kijelkentkezes</string>
+    <string name="newRecipe">Új menü</string>
+    <string name="listRecipe">Menük listázása</string>
+    <string name="logout">Egyebek</string>
     <string name="title_activity_group_admin">GroupAdminActivity</string>
 </resources>

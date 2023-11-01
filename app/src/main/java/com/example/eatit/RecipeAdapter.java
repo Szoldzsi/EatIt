@@ -16,8 +16,8 @@ public class RecipeAdapter extends BaseAdapter {
 
     private ArrayList<Recipe> recipes;
 
-    public RecipeAdapter(Fragment context, ArrayList<Recipe> recipes) {
-        this.context = context.requireContext();
+    public RecipeAdapter(Context context, ArrayList<Recipe> recipes) {
+        this.context = context;
         this.recipes = recipes;
     }
 

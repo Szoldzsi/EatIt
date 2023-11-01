@@ -270,7 +270,7 @@ public class RecipeListFragment extends Fragment{
                 }
 
                 // Adapter beállítás
-                adapter = new RecipeAdapter(RecipeListFragment.this, recipeList);
+                adapter = new RecipeAdapter(requireContext(), recipeList);
                 recList.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }

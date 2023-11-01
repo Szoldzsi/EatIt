@@ -19,7 +19,7 @@ public class OthersFragment extends Fragment {
     private static final String KEY = "username";
     String username;
 
-    Button logout, newRecipe, listRecipe, createGrp, listGrpBtn;
+    Button logout, newRecipe, listRecipe, createGrp, listGrpBtn, invitesBtn;
 
     public OthersFragment() {
         // Required empty public constructor
@@ -44,6 +44,7 @@ public class OthersFragment extends Fragment {
         listRecipe = view.findViewById(R.id.recListBtn);
         createGrp = view.findViewById(R.id.createGroupBtn);
         listGrpBtn = view.findViewById(R.id.listGroupBtn);
+        invitesBtn = view.findViewById(R.id.invitesBtn);
 
         createGrp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,6 +56,19 @@ public class OthersFragment extends Fragment {
                 fragmentTransaction.replace(R.id.fragment_container, newGroupFragment);
                 fragmentTransaction.addToBackStack(null);
 
+                fragmentTransaction.commit();
+            }
+        });
+
+        invitesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InvitesFragment invitesFragment = new InvitesFragment();
+                invitesFragment.setUsername(username);
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, invitesFragment);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         });

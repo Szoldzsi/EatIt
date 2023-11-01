@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -107,6 +108,32 @@ public class RegisterActivity extends AppCompatActivity {
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         if (task.isSuccessful()) {
                                                             Toast.makeText(RegisterActivity.this, "Sikeres regisztracio!", Toast.LENGTH_SHORT).show();
+                                                            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<String> task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        String fcmToken = task.getResult();
+
+                                                                        // Save FCM token in the Tokens node along with the username
+                                                                        if (fcmToken != null) {
+                                                                            DatabaseReference tokensRef = FirebaseDatabase.getInstance().getReference("Tokens");
+                                                                            tokensRef.child(username).setValue(fcmToken)
+                                                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                        @Override
+                                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                                            if (task.isSuccessful()) {
+                                                                                                Toast.makeText(RegisterActivity.this, "FCM token saved for " + username, Toast.LENGTH_SHORT).show();
+                                                                                            } else {
+                                                                                                Toast.makeText(RegisterActivity.this, "Failed to save FCM token", Toast.LENGTH_SHORT).show();
+                                                                                            }
+                                                                                        }
+                                                                                    });
+                                                                        }
+                                                                    } else {
+                                                                        Toast.makeText(RegisterActivity.this, "Failed to retrieve FCM token", Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                }
+                                                            });
                                                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                                             startActivity(intent);
                                                             finish();
