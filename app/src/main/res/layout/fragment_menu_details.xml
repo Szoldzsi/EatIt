@@ -4,42 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MenuDetailsFragment">
+    tools:context=".MenuDetailsFragment"
+    android:background="@drawable/backgroundactivity">
 
-<!--    &lt;!&ndash; Menu Name &ndash;&gt;-->
-<!--    <TextView-->
-<!--        android:id="@+id/dateTV"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Dátum:"-->
-<!--        android:textSize="30sp" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/menuNameTextView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Menu Name:"-->
-<!--        android:textSize="18sp"-->
-<!--        android:textStyle="bold"-->
-<!--        android:layout_marginBottom="8dp"/>-->
-
-<!--    &lt;!&ndash; Menu Ingredients &ndash;&gt;-->
-<!--    <TextView-->
-<!--        android:id="@+id/menuIngredientsTextView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Ingredients:"-->
-<!--        android:textSize="16sp"-->
-<!--        android:layout_marginBottom="8dp"/>-->
-
-<!--    &lt;!&ndash; Menu Special &ndash;&gt;-->
-<!--    <TextView-->
-<!--        android:id="@+id/menuSpecialTextView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Special:"-->
-<!--        android:textSize="16sp"-->
-<!--        android:layout_marginBottom="16dp"/>-->
 
     <ListView
         android:id="@+id/menuDetailsList"

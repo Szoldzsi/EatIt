@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".LoginActivity">
+    tools:context=".LoginActivity"
+    android:background="@drawable/background">
 
     <TextView
         android:id="@+id/textView"
@@ -21,7 +22,7 @@
     <EditText
         android:id="@+id/login_email"
         android:layout_width="283dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:ems="10"
         android:hint="e-mail"
         android:inputType="textPersonName" />
@@ -29,7 +30,7 @@
     <EditText
         android:id="@+id/login_password"
         android:layout_width="285dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:ems="10"
         android:hint="jelszo"
         android:inputType="textPassword" />
@@ -38,12 +39,14 @@
         android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bejelentkezes" />
+        android:text="Bejelentkezes"
+        style="@style/gomb"/>
 
     <Button
         android:id="@+id/register_button"
         android:layout_width="157dp"
         android:layout_height="wrap_content"
-        android:text="Regisztracio" />
+        android:text="Regisztracio"
+        style="@style/gomb"/>
 
 </LinearLayout>
