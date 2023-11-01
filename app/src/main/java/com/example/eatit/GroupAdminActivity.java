@@ -77,6 +77,7 @@ public class GroupAdminActivity extends AppCompatActivity {
                 Intent intent1 = new Intent(GroupAdminActivity.this, ListGroupMembersActivity.class);
                 intent1.putExtra("groupKey", groupKey);
                 intent1.putExtra("username", username);
+                intent1.putExtra("groupOwner", groupOwner);
                 startActivity(intent1);
             }
         });
@@ -86,7 +87,9 @@ public class GroupAdminActivity extends AppCompatActivity {
                 Intent intent1 = new Intent(GroupAdminActivity.this, NewGroupMenuBeginningActivity.class);
                 intent1.putExtra("groupKey", groupKey);
                 intent1.putExtra("username", username);
+                intent1.putExtra("groupOwner", groupOwner);
                 startActivity(intent1);
+                finish();
             }
         });
         listGrpMenus.setOnClickListener(new View.OnClickListener() {
@@ -174,7 +177,6 @@ public class GroupAdminActivity extends AppCompatActivity {
                 if (usernameExists) {
                     groupsRef.child(groupKey).child("members").child(invitedUsername).setValue(false);
 
-                    sendNotification(invitedUsername, groupName);
 
                     Toast.makeText(GroupAdminActivity.this, "Meghívó elküldve: " + invitedUsername + " felhasználónak", Toast.LENGTH_SHORT).show();
                 } else {
@@ -190,7 +192,7 @@ public class GroupAdminActivity extends AppCompatActivity {
         });
     }
 
-    private void sendNotification(String invitedUsername, String groupName) {
+/*    private void sendNotification(String invitedUsername, String groupName) {
         DatabaseReference tokensRef = FirebaseDatabase.getInstance().getReference("Tokens");
         tokensRef.child(invitedUsername).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -212,13 +214,6 @@ public class GroupAdminActivity extends AppCompatActivity {
     }
 
     private void sendFCMNotification(String fcmToken, String title, String message) {
-        // Implement the logic to send an FCM notification using the provided token, title, and message
-        // This logic requires a server-side implementation that communicates with the FCM API
-        // It's usually done on a secure server and can't be directly executed on the client-side due to security restrictions.
-        // This could involve using Cloud Functions for Firebase, or a custom backend server to trigger the notification.
-        // Server implementation is necessary to handle FCM securely.
-        // Refer to the Firebase Cloud Messaging documentation for more details on how to send FCM messages.
-        // This code should not be executed directly on the client-side Android application.
         RemoteMessage notification = new RemoteMessage.Builder(fcmToken + "@fcm.googleapis.com")
                 .setMessageId(Integer.toString(0))
                 .addData("title", title)
@@ -226,7 +221,7 @@ public class GroupAdminActivity extends AppCompatActivity {
                 .build();
 
         FirebaseMessaging.getInstance().send(notification);
-    }
+    }*/
 
 
 }

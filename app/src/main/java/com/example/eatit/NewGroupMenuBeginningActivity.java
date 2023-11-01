@@ -30,7 +30,7 @@ import java.util.List;
 
 public class NewGroupMenuBeginningActivity extends AppCompatActivity {
 
-    String grpKey, username;
+    String grpKey, username, groupOwner;
     EditText det, dat, dur;
     Button startBtn;
     CheckBox existingCB;
@@ -45,6 +45,7 @@ public class NewGroupMenuBeginningActivity extends AppCompatActivity {
         Intent intent = getIntent();
         grpKey = intent.getStringExtra("groupKey");
         username = intent.getStringExtra("username");
+        groupOwner = intent.getStringExtra("groupOwner");
 
         det = findViewById(R.id.napokgrpTF);
         dat = findViewById(R.id.datumgrpTF);
@@ -89,8 +90,11 @@ public class NewGroupMenuBeginningActivity extends AppCompatActivity {
                     intent.putExtra("name", intStr);
                     intent.putExtra("startDate", startDate);
                     intent.putExtra("duration", durat);
+                    intent.putExtra("prevState", "group");
+                    intent.putExtra("groupOwner", groupOwner);
 
                     startActivity(intent);
+                    finish();
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
@@ -104,6 +108,12 @@ public class NewGroupMenuBeginningActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String selectedMenu = listExisting.getSelectedItem().toString();
                 copyMenuToGroup(selectedMenu);
+                Intent intent = new Intent(NewGroupMenuBeginningActivity.this, GroupAdminActivity.class);
+                intent.putExtra("username", username);
+                intent.putExtra("groupKey", grpKey);
+                intent.putExtra("groupOwner", groupOwner);
+                startActivity(intent);
+                finish();
             }
         });
 

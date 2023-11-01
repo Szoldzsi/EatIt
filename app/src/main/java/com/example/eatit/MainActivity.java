@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
      BottomNavigationView bottomNavigationView;
      private static final String SELECTED_KEY = "selectedItemId";
      private int selectedItemId;
-    private static final int REQUEST_NOTIFICATION_PERMISSION = 1001;
 
     ArrayList<String> recipeArrayList;
 
@@ -59,12 +58,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_BOOT_COMPLETED)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted, request the permission
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_BOOT_COMPLETED}, REQUEST_NOTIFICATION_PERMISSION);
-        }
 
         tw = findViewById(R.id.textView3);
         logout = findViewById(R.id.logoutBtn);
@@ -93,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 if (task.isSuccessful()){
                     DataSnapshot dataSnapshot = task.getResult();
                     username = String.valueOf(dataSnapshot.getValue());
-                    tw.setText(username);
+                    tw.setText("EatIt!");
                     progressBar.setVisibility(View.INVISIBLE);
                     progressBar.setIndeterminate(false);
                     loadingView.setVisibility(View.GONE);

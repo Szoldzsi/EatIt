@@ -49,9 +49,7 @@ public class NewMenuFragment extends Fragment {
         dat = view.findViewById(R.id.datumTF);
         dur = view.findViewById(R.id.idotartamTF);
         startBtn = view.findViewById(R.id.startBtn);
-        tw = view.findViewById(R.id.textView11);
 
-        tw.setText(username);
         startBtn.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -68,6 +66,7 @@ public class NewMenuFragment extends Fragment {
                     intent.putExtra("name", intStr);
                     intent.putExtra("startDate", startDate);
                     intent.putExtra("duration", durat);
+                    intent.putExtra("prevState", "fragment");
 
                     startActivity(intent);
                 } catch (ParseException e) {

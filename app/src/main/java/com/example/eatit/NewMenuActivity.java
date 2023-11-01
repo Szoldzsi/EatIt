@@ -27,7 +27,7 @@ import java.util.List;
 
 public class NewMenuActivity extends AppCompatActivity {
 
-    String usrname;
+    String usrname, groupOwner, prevState;
     String name;
     Date startDate;
     int duration;
@@ -44,7 +44,9 @@ public class NewMenuActivity extends AppCompatActivity {
 
         usrname = intent.getStringExtra("username");
         name = intent.getStringExtra("name");
+        groupOwner = intent.getStringExtra("groupOwner");
         startDate = (Date) getIntent().getSerializableExtra("startDate");
+        prevState = intent.getStringExtra("prevState");
         duration = intent.getIntExtra("duration", 0);
         if (intent.hasExtra("grpKey")) {
             grpKey = intent.getStringExtra("grpKey");
@@ -67,6 +69,20 @@ public class NewMenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 uploadDataToFirebase();
+                if(prevState.equals("fragment")){
+                    Intent intent = new Intent(NewMenuActivity.this, MainActivity.class);
+                    intent.putExtra("username", usrname);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    Intent intent = new Intent(NewMenuActivity.this, GroupAdminActivity.class);
+                    intent.putExtra("username", usrname);
+                    intent.putExtra("groupKey", grpKey);
+                    intent.putExtra("groupOwner", groupOwner);
+                    startActivity(intent);
+                    finish();
+                }
+
             }
         });
     }
@@ -115,9 +131,7 @@ public class NewMenuActivity extends AppCompatActivity {
             formDate.add(Calendar.DAY_OF_MONTH, i);
             formDates.add(formDate);
 
-            // Log the calculated date for debugging
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Log.d("CalculateDates", "Date " + i + ": " + dateFormat.format(formDate.getTime()));
+/*            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");*/
         }
 
         return formDates;
@@ -128,11 +142,5 @@ public class NewMenuActivity extends AppCompatActivity {
         for (int i = 0; i < duration; i++) {
             formDataList.add(new MenuClass());
         }
-        Log.d("NewMenuActivity", "formDataList size: " + formDataList.size());
     }
-
-
-//    for (MenuClass mc : ){
-
-//    }
 }
