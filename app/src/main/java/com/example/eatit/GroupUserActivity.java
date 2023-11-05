@@ -39,7 +39,7 @@ public class GroupUserActivity extends AppCompatActivity {
         exitGrpBtn = findViewById(R.id.exitGroupBtn);
         groupNameTV = findViewById(R.id.userGrpNameTV);
 
-        groupsRef.child(groupKey).addListenerForSingleValueEvent(new ValueEventListener() {
+        groupsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
