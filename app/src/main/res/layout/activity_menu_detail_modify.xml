@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroundactivity"
+    android:orientation="vertical"
+    tools:context=".MenuDetailModifyActivity">
+
+    <TextView
+        android:id="@+id/DateTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="50sp"
+        android:text="TextView"
+        android:textSize="25sp" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/foodNameTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Étel neve"
+                android:textSize="25sp" />
+
+            <EditText
+                android:id="@+id/foodNameET"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text"
+                android:text="Name" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/ingrTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="30sp"
+                android:text="Speciális"
+                android:textSize="25sp" />
+
+            <EditText
+                android:id="@+id/ingrET"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text"
+                android:text="Name" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/specialTagTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hozzávalók"
+                android:textSize="25sp" />
+
+            <EditText
+                android:id="@+id/specialTagET"
+                android:layout_width="wrap_content"
+                android:layout_height="105dp"
+                android:ems="10"
+                android:inputType="text"
+                android:text="Name" />
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        android:id="@+id/saveModifyBtn"
+        style="@style/gomb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Módosítások mentése" />
+
+</LinearLayout>

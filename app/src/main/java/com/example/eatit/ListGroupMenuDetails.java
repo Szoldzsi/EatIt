@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,6 +24,8 @@ public class ListGroupMenuDetails extends AppCompatActivity {
     private DatabaseReference menuRef;
     private ArrayList<MenuClass> menuDetailList;
     private MenuDetailsAdapter adapter;
+    String groupKey, owner, username, menuName;
+    TextView menuNameTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,15 +33,17 @@ public class ListGroupMenuDetails extends AppCompatActivity {
         setContentView(R.layout.activity_list_group_menu_details);
 
         detailsLV = findViewById(R.id.menuDetailsListView);
+        menuNameTV = findViewById(R.id.menuDetailsGrp);
         menuDetailList = new ArrayList<>();
         adapter = new MenuDetailsAdapter(this, menuDetailList);
         detailsLV.setAdapter(adapter);
-
         Intent intent = getIntent();
         if (intent != null) {
-            String groupKey = intent.getStringExtra("groupKey");
-            String username = intent.getStringExtra("username");
-            String menuName = intent.getStringExtra("menuName");
+            groupKey = intent.getStringExtra("groupKey");
+            username = intent.getStringExtra("username");
+            menuName = intent.getStringExtra("menuName");
+            owner = intent.getStringExtra("owner");
+            menuNameTV.setText(menuName);
             menuRef = FirebaseDatabase.getInstance().getReference("Groups").child(groupKey).child("group_menus").child(menuName);
             menuRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -44,8 +51,8 @@ public class ListGroupMenuDetails extends AppCompatActivity {
                     for (DataSnapshot dateSnapshot : dataSnapshot.getChildren()) {
                         String dateKey = dateSnapshot.getKey();
                         String menu = dateSnapshot.child("menuName").getValue(String.class);
-                        String menuIngredients = dateSnapshot.child("menuIngredients").getValue(String.class);
-                        String menuSpecial = dateSnapshot.child("menuSpecial").getValue(String.class);
+                        String menuIngredients = dateSnapshot.child("menuSpecial").getValue(String.class);
+                        String menuSpecial = dateSnapshot.child("menuIngredients").getValue(String.class);
 
                         MenuClass menuDetailItem = new MenuClass(menu, menuIngredients, menuSpecial, dateKey);
                         menuDetailList.add(menuDetailItem);
@@ -55,9 +62,32 @@ public class ListGroupMenuDetails extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    // Handle onCancelled event if needed
                 }
             });
         }
+
+        detailsLV.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                // Get the selected menu
+                MenuClass selectedMenu = menuDetailList.get(position);
+
+                Intent modifyIntent = new Intent(ListGroupMenuDetails.this, MenuDetailModifyActivity.class);
+
+                modifyIntent.putExtra("grpKey", groupKey);
+                modifyIntent.putExtra("owner", owner);
+                modifyIntent.putExtra("usrname", username);
+                modifyIntent.putExtra("mnName", menuName);
+                modifyIntent.putExtra("menuName", selectedMenu.getMenuName());
+                modifyIntent.putExtra("menuIngr", selectedMenu.getMenuIngredients());
+                modifyIntent.putExtra("menuSpec", selectedMenu.getMenuSpecial());
+                modifyIntent.putExtra("menuDate", selectedMenu.getMenuDate());
+
+
+                startActivity(modifyIntent);
+
+                return true;
+            }
+        });
     }
 }

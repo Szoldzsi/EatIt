@@ -26,7 +26,7 @@ import java.util.List;
 
 public class ListGroupMenus extends AppCompatActivity {
 
-    String grpKey, username;
+    String grpKey, username, owner;
     ListView groupMenusList;
 
     private DatabaseReference groupsRef;
@@ -41,6 +41,7 @@ public class ListGroupMenus extends AppCompatActivity {
         Intent intent = getIntent();
         grpKey = intent.getStringExtra("groupKey");
         username = intent.getStringExtra("username");
+        owner = intent.getStringExtra("owner");
         groupsRef = FirebaseDatabase.getInstance().getReference("Groups");
 
         groupMenusList = findViewById(R.id.groupMenusList);
@@ -62,6 +63,8 @@ public class ListGroupMenus extends AppCompatActivity {
                 intent.putExtra("groupKey", grpKey);
                 intent.putExtra("username", username);
                 intent.putExtra("menuName", selectedMenuName);
+                intent.putExtra("owner", owner);
+
                 startActivity(intent);
             }
         });

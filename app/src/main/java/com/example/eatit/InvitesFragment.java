@@ -64,7 +64,7 @@ public class InvitesFragment extends Fragment {
     }
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.setHeaderTitle("Choose an action");
+        menu.setHeaderTitle("Válassz műveletet");
         menu.add(0, 1, 0, "Elfogad");
         menu.add(0, 2, 0, "Elutasít");
     }

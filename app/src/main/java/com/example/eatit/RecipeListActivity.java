@@ -124,14 +124,14 @@ public class RecipeListActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
 
-                        Toast.makeText(RecipeListActivity.this, "Recipe deleted", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RecipeListActivity.this, "Recept törölve", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         // Failed to delete recipe
-                        Toast.makeText(RecipeListActivity.this, "Failed to delete recipe", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RecipeListActivity.this, "Hiba a recept törlése közben", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

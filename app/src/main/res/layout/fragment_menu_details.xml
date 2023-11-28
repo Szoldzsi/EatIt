@@ -5,8 +5,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MenuDetailsFragment"
-    android:background="@drawable/backgroundactivity">
+    >
 
+
+    <TextView
+        android:id="@+id/menuNameDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="25sp" />
 
     <ListView
         android:id="@+id/menuDetailsList"

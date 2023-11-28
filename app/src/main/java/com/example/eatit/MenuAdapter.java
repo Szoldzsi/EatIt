@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
@@ -57,7 +58,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         MenuClass formData = data.get(position);
-        Log.d("DataObjectHash", "Data object hash code: " + System.identityHashCode(formData));
 
         // Attach TextWatchers to capture user input and update formData
         holder.etName.addTextChangedListener(new TextWatcher() {
@@ -67,9 +67,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 formData.setName(s.toString());
-
-                Log.d("FormUpdate", "Form at position " + position + " updated: Name = " + s.toString());
-                Log.d("UserInput", "User input: " + s.toString());
             }
 
             @Override
@@ -146,7 +143,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         holder.removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Remove the corresponding form from the data list
                 if (position >= 0 && position < data.size()) {
                     data.remove(position);
                     notifyItemRemoved(position);
@@ -166,8 +162,11 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
             @Override
             public void afterTextChanged(Editable s) {}
         });
+        //Calendar dateCalendar = formDates.get(position);
+        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+        //String formattedDate = dateFormat.format(dateCalendar.getTime());
         Calendar dateCalendar = formDates.get(position);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, yyyy.MM.dd", new Locale("hu", "HU"));
         String formattedDate = dateFormat.format(dateCalendar.getTime());
         holder.dateTextView.setText(formattedDate);
     }
@@ -237,7 +236,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
                     String recipeSpecial = snapshot.child("recipeSpecial").getValue(String.class);
                     if (recipeSpecial != null && !recipeSpecial.isEmpty() && !uniqueRecipeSpecials.contains(recipeSpecial)) {
                         recipeNames.add(recipeSpecial);
-                        uniqueRecipeSpecials.add(recipeSpecial); // Add the special to the set
+                        uniqueRecipeSpecials.add(recipeSpecial);
+                        uniqueRecipeSpecials.add(recipeSpecial);
                     }
                 }
 
@@ -248,23 +248,19 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle any errors here
             }
         });
     }
     private void retrieveRecipeData(String selectedRecipeName, ViewHolder holder) {
         DatabaseReference recipesRef = FirebaseDatabase.getInstance().getReference("Recipes").child(username);
 
-        // Add a listener to search for the recipe with the matching name
         recipesRef.orderByChild("recipeName").equalTo(selectedRecipeName).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    // Retrieve the special and ingredients data
                     String special = snapshot.child("recipeSpecial").getValue(String.class);
                     String ingredients = snapshot.child("recipeIngredients").getValue(String.class);
 
-                    // Update the EditText fields in the ViewHolder with the retrieved data
                     holder.etName.setText(selectedRecipeName);
                     holder.etSpecial.setText(special);
                     holder.etIngredients.setText(ingredients);

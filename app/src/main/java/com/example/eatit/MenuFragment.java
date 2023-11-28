@@ -29,14 +29,6 @@ public class MenuFragment extends Fragment {
     public MenuFragment() {
         // Required empty public constructor
     }
-    //public static MenuFragment newInstance(String param1, String param2) {
-    //    MenuFragment fragment = new MenuFragment();
-    //    Bundle args = new Bundle();
-      //  args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
-        //fragment.setArguments(args);
-        //return fragment;
-    //}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +56,7 @@ public class MenuFragment extends Fragment {
                 String ingredients_list = ingredientsName.getText().toString();
 
                 if (TextUtils.isEmpty(menu_Name)){
-                    Toast.makeText(getActivity(), "Hiányzó menü név!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Hiányzó étel név!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 

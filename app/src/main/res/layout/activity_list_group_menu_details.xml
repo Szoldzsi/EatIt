@@ -8,6 +8,13 @@
     tools:context=".ListGroupMenuDetails"
     android:background="@drawable/backgroundactivity">
 
+    <TextView
+        android:id="@+id/menuDetailsGrp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="25sp" />
+
     <ListView
         android:id="@+id/menuDetailsListView"
         android:layout_width="match_parent"

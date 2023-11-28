@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/backgroundactivity">
+    >
 
     <TextView
         android:id="@+id/dateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Dátum:"
-        android:textSize="30sp" />
+        android:textSize="25sp" />
 
     <TextView
         android:id="@+id/nameTV"
@@ -20,17 +20,17 @@
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/ingredientsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hozzávalók"
-        android:textSize="20sp" />
-
-    <TextView
         android:id="@+id/specialTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Speciális"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/ingredientsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hozzávalók"
         android:textSize="20sp" />
 
 </LinearLayout>

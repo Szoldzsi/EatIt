@@ -102,6 +102,7 @@ public class GroupAdminActivity extends AppCompatActivity {
                 Intent intent1 = new Intent(GroupAdminActivity.this, ListGroupMenus.class);
                 intent1.putExtra("groupKey", groupKey);
                 intent1.putExtra("username", username);
+                intent1.putExtra("owner", groupOwner);
                 startActivity(intent1);
             }
         });
@@ -127,6 +128,15 @@ public class GroupAdminActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent mainIntent = new Intent(GroupAdminActivity.this, MainActivity.class);
+        mainIntent.putExtra("username", username);
+        startActivity(mainIntent);
+        finish(); // Optional: Call finish to close the current activity if you don't want to keep it in the back stack
     }
 
     private void showInviteDialog() {

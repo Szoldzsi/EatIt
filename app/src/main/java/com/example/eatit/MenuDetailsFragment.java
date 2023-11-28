@@ -1,5 +1,6 @@
 package com.example.eatit;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,10 +24,11 @@ import java.util.ArrayList;
 public class MenuDetailsFragment extends Fragment {
 
     private static final String KEY = "username";
-    String username;
+    String username, menuName;
     private ListView listView;
     private MenuDetailsAdapter adapter;
     private ArrayList<MenuClass> menuDetailList;
+    TextView menuNameTV;
 
 
     public MenuDetailsFragment() {
@@ -49,45 +51,15 @@ public class MenuDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_menu_details, container, false);
 
-        // Find the TextViews in the layout
-//        TextView menuNameTextView = view.findViewById(R.id.menuNameTextView);
-//        TextView menuIngredientsTextView = view.findViewById(R.id.menuIngredientsTextView);
-//        TextView menuSpecialTextView = view.findViewById(R.id.menuSpecialTextView);
-//        TextView dateTV = view.findViewById(R.id.dateTV);
-
         listView = view.findViewById(R.id.menuDetailsList);
         menuDetailList = new ArrayList<>();
-        // Retrieve the menu key from the bundle
+        menuNameTV = view.findViewById(R.id.menuNameDetails);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            String menuName = bundle.getString("menuName");
-            Log.d("MenuDetailsFragment", "Menu Name: " + menuName);
-            // Perform a new Firebase query to get the children nodes under the menuKey
+            menuName = bundle.getString("menuName");
             DatabaseReference menuRef = FirebaseDatabase.getInstance().getReference("Menus")
                     .child(username).child(menuName);
-
-//            menuRef.addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                    if (dataSnapshot.exists()) {
-//                        // Assuming you have a MenuClass to hold the data
-//                        MenuClass menu = dataSnapshot.getValue(MenuClass.class);
-//
-//                        // Set the text values for the TextViews
-//                        menuNameTextView.setText("Menu Name: " + menu.getMenuName());
-//                        menuIngredientsTextView.setText("Ingredients: " + menu.getMenuIngredients());
-//                        menuSpecialTextView.setText("Special: " + menu.getMenuSpecial());
-//                    } else {
-//                        // Handle the case where the menuKey doesn't exist in the database
-//                        // Display an error message or take appropriate action
-//                    }
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError) {
-//                    // Handle onCancelled event if needed
-//                }
-//            });
+            menuNameTV.setText(menuName);
             menuRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -97,25 +69,42 @@ public class MenuDetailsFragment extends Fragment {
                         String menuIngredients = dateSnapshot.child("menuIngredients").getValue(String.class);
                         String menuSpecial = dateSnapshot.child("menuSpecial").getValue(String.class);
 
-//                        dateTV.append(dateKey);
-//                        menuNameTextView.setText("Menü neve: " + menu);
-//                        menuIngredientsTextView.append("Hozzávalók: " + menuIngredients + "\n");
-//                        menuSpecialTextView.append("Speciális: " + menuSpecial + "\n");
                         MenuClass menuDetailItem = new MenuClass(menu, menuIngredients, menuSpecial, dateKey);
                         menuDetailList.add(menuDetailItem);
-//                        String menuName, String menuSpecial, String menuIngredients, String menuDate
+
                     }
                     adapter = new MenuDetailsAdapter(getContext(), menuDetailList);
                     listView.setAdapter(adapter);
+
                     adapter.notifyDataSetChanged();
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    // Handle onCancelled event if needed
                 }
             });
         }
+
+        listView.setOnItemLongClickListener((parent, view1, position, id) -> {
+            // Get the selected menu
+            MenuClass selectedMenu = menuDetailList.get(position);
+
+            // Create an Intent to start the modify activity
+            Intent modifyIntent = new Intent(requireContext(), MenuDetailModifyActivity.class);
+
+            // Put the necessary data in the Intent
+            modifyIntent.putExtra("mnName", menuName);
+            modifyIntent.putExtra("menuName", selectedMenu.getMenuName());
+            modifyIntent.putExtra("menuIngr", selectedMenu.getMenuIngredients());
+            modifyIntent.putExtra("menuSpec", selectedMenu.getMenuSpecial());
+            modifyIntent.putExtra("usrname", username);
+            modifyIntent.putExtra("menuDate", selectedMenu.getMenuDate());
+
+            // Start the ModifyMenuActivity
+            startActivity(modifyIntent);
+
+            return true; // Return true to consume the long press event
+        });
 
         return view;
     }
